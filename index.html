@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Life App">
+<meta name="theme-color" content="#0a0a0a">
+<title>Life App</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0a;--bg2:#141414;--bg3:#1e1e1e;--bg4:#282828;--bg5:#323232;
+  --bd:rgba(255,255,255,0.07);--bd2:rgba(255,255,255,0.13);--bd3:rgba(255,255,255,0.22);
+  --t:#f0ede8;--t2:#9a9690;--t3:#555250;
+  --green:#c8f07a;--teal:#8fd4a8;--amber:#f0c87a;--red:#f07a7a;--purple:#b8a4f8;--blue:#7ab8f0;--coral:#f0a87a;
+  --serif:'DM Serif Display',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;
+  --r:12px;--r2:8px;--r3:6px;
+  --sb:env(safe-area-inset-bottom,16px);--st:env(safe-area-inset-top,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{background:var(--bg);color:var(--t);font-family:var(--sans)}
+body{max-width:430px;margin:0 auto;min-height:100dvh;padding-bottom:calc(68px + var(--sb))}
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;
+  background:rgba(8,8,8,0.97);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-top:1px solid var(--bd);z-index:200;padding-bottom:var(--sb)}
+.nav-inner{display:flex}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 0 8px;
+  border:none;background:none;color:var(--t3);font-family:var(--sans);font-size:9px;font-weight:500;
+  cursor:pointer;letter-spacing:.03em;text-transform:uppercase}
+.nb svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.nb.on{color:var(--green)}
+.screen{display:none}.screen.on{display:block;animation:fi .15s ease}
+@keyframes fi{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
+.ph{padding:calc(var(--st) + 48px) 20px 16px}
+.ph-eye{font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:5px}
+.ph-title{font-family:var(--serif);font-size:26px;line-height:1.2;color:var(--t)}
+.ph-title em{font-style:italic;color:var(--green)}
+.card{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);padding:14px 16px;margin-bottom:10px}
+.sp{padding:0 20px 16px}
+.slbl{font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);margin:12px 0 7px}
+.divider{height:1px;background:var(--bd);margin:10px 0}
+.pill{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:500;display:inline-block}
+.pill-g{background:rgba(143,212,168,.18);color:var(--teal)}
+.pill-a{background:rgba(240,200,122,.18);color:var(--amber)}
+.pill-r{background:rgba(240,122,122,.18);color:var(--red)}
+.pill-p{background:rgba(184,164,248,.18);color:var(--purple)}
+.btn{padding:10px 16px;border-radius:var(--r2);border:1px solid var(--bd2);background:var(--bg3);
+  color:var(--t);font-family:var(--sans);font-size:13px;font-weight:500;cursor:pointer;width:100%;text-align:center;display:block}
+.btn:active{background:var(--bg4)}
+.btn-p{background:var(--green);color:#0a0a0a;border-color:var(--green)}
+.btn-sm{padding:6px 12px;font-size:12px;width:auto;display:inline-block}
+.btn-del{color:var(--red);border-color:rgba(240,122,122,.3)}
+.btn-purple{background:rgba(184,164,248,.15);color:var(--purple);border-color:rgba(184,164,248,.3)}
+.tab-row{display:flex;gap:6px;padding:0 20px 12px}
+.tab-btn{flex:1;min-width:0;padding:8px 4px;border:1px solid var(--bd2);border-radius:var(--r2);background:var(--bg2);
+  color:var(--t2);font-family:var(--sans);font-size:11px;font-weight:500;cursor:pointer;text-align:center}
+.tab-btn.on{background:var(--bg4);color:var(--t);border-color:var(--bd3)}
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.bl{font-size:11px;color:var(--t3);width:58px;flex-shrink:0}
+.bt{flex:1;height:4px;background:var(--bg4);border-radius:2px;overflow:hidden}
+.bf{height:100%;border-radius:2px;transition:width .5s}
+.bv{font-size:11px;color:var(--t3);width:40px;text-align:right;flex-shrink:0}
+input[type=text],input[type=number],textarea,select{background:var(--bg3);border:1px solid var(--bd2);border-radius:var(--r2);color:var(--t);font-family:var(--sans);font-size:14px;padding:10px 12px;width:100%;outline:none;-webkit-appearance:none}
+input:focus,textarea:focus{border-color:var(--bd3)}
+textarea{resize:none;line-height:1.6}
+input[type=range]{-webkit-appearance:none;width:100%;height:4px;background:var(--bg4);border-radius:2px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--green);cursor:pointer}
+.chk-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--bd);cursor:pointer;-webkit-user-select:none;user-select:none}
+.chk-row:last-child{border-bottom:none}
+.chk-box{width:20px;height:20px;border-radius:5px;border:1.5px solid var(--bd2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}
+.chk-box.on{background:var(--teal);border-color:var(--teal)}
+.chk-box svg{width:11px;height:11px;stroke:#0a0a0a;stroke-width:2.5;fill:none;opacity:0}
+.chk-box.on svg{opacity:1}
+.chk-lbl{flex:1;font-size:13px;color:var(--t2)}
+.chk-row.done .chk-lbl{text-decoration:line-through;color:var(--t3)}
+.day-strip{display:flex;gap:6px;padding:0 20px 12px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--bd)}
+.day-strip::-webkit-scrollbar{display:none}
+.dchip{flex-shrink:0;padding:6px 14px;border-radius:20px;border:1px solid var(--bd2);background:var(--bg2);color:var(--t2);font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap}
+.dchip.on{background:var(--green);color:#0a0a0a;border-color:var(--green)}
+.mc{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;margin-bottom:9px}
+.mc-top{padding:12px 14px;cursor:pointer;display:flex;align-items:flex-start;gap:10px}
+.mc-ico{width:36px;height:36px;border-radius:var(--r2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.ico-fr{background:rgba(240,200,122,.14)}.ico-ma{background:rgba(143,212,168,.14)}.ico-ab{background:rgba(122,184,240,.14)}
+.mc-meta{flex:1;min-width:0}
+.mc-type{font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--t3);margin-bottom:3px}
+.mc-name{font-size:14px;font-weight:500;color:var(--t);line-height:1.3;margin-bottom:5px}
+.mc-pills{display:flex;gap:4px;flex-wrap:wrap}
+.mc-arr{width:24px;height:24px;border-radius:50%;border:1px solid var(--bd2);background:var(--bg3);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.mc-arr svg{width:12px;height:12px;stroke:var(--t2);fill:none;stroke-width:2;transition:transform .2s}
+.mc.open .mc-arr svg{transform:rotate(180deg)}
+.mc-body{display:none;padding:0 14px 14px;border-top:1px solid var(--bd)}
+.mc.open .mc-body{display:block}
+.alt-tog{display:flex;background:var(--bg3);border-radius:var(--r2);padding:3px;margin:10px 0;gap:2px}
+.at-btn{flex:1;padding:6px;border:none;background:none;color:var(--t3);font-family:var(--sans);font-size:12px;font-weight:500;border-radius:5px;cursor:pointer}
+.at-btn.on{background:var(--bg5);color:var(--t)}
+.ing-list{list-style:none;display:flex;flex-direction:column;gap:3px;margin-bottom:8px}
+.ing-list li{font-size:13px;color:var(--t2);display:flex;align-items:flex-start;gap:5px;line-height:1.5}
+.ing-list li::before{content:"·";color:var(--green);font-weight:700;flex-shrink:0}
+.steps-ol{list-style:none;display:flex;flex-direction:column;gap:5px}
+.steps-ol li{font-size:13px;color:var(--t2);display:flex;gap:8px;line-height:1.55}
+.sn{min-width:18px;height:18px;background:var(--bg4);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:500;color:var(--green);flex-shrink:0;margin-top:1px}
+.nwg{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:8px}
+.nwc{background:var(--bg3);border-radius:var(--r3);padding:7px 9px}
+.nwl{font-size:9px;color:var(--t3);margin-bottom:1px}
+.nwv{font-size:14px;font-weight:500;color:var(--t)}
+.nwv span{font-size:10px;color:var(--t3);font-weight:400}
+.shop-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r2);cursor:pointer;margin-bottom:3px}
+.shop-item.done{opacity:.35}.shop-item.done .si-name{text-decoration:line-through}
+.si-chk{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--bd2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.shop-item.done .si-chk{background:var(--teal);border-color:var(--teal)}
+.si-chk svg{width:9px;height:9px;stroke:#0a0a0a;stroke-width:2.5;fill:none;opacity:0}
+.shop-item.done .si-chk svg{opacity:1}
+.si-name{flex:1;font-size:13px;color:var(--t)}.si-p{font-size:11px;color:var(--t3)}
+.ex-card{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;margin-bottom:8px}
+.ex-head{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer}
+.ex-num{width:28px;height:28px;border-radius:50%;border:1px solid var(--bd2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:var(--t2);flex-shrink:0}
+.ex-num.done-ex{background:var(--teal);border-color:var(--teal);color:#0a0a0a}
+.ex-info{flex:1}.ex-name{font-size:14px;font-weight:500;color:var(--t);margin-bottom:2px}.ex-sets{font-size:11px;color:var(--t3)}
+.ex-arr{font-size:12px;color:var(--t3);transition:transform .2s;flex-shrink:0}
+.ex-card.open .ex-arr{transform:rotate(180deg)}
+.ex-body{display:none;padding:0 14px 14px;border-top:1px solid var(--bd)}
+.ex-card.open .ex-body{display:block}
+.set-grid{display:grid;grid-template-columns:28px 1fr 1fr 32px;gap:7px;align-items:center;margin-bottom:8px}
+.set-lbl{font-size:11px;color:var(--t3);text-align:center}
+.set-in{background:var(--bg3);border:1px solid var(--bd2);border-radius:var(--r2);padding:8px;text-align:center;font-size:15px;font-weight:500;color:var(--t);font-family:var(--sans);outline:none;width:100%}
+.set-in:focus{border-color:var(--bd3)}
+.set-chk{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--bd2);background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+.set-chk.on{background:var(--teal);border-color:var(--teal)}
+.set-chk svg{width:13px;height:13px;stroke:var(--t3);fill:none;stroke-width:2.5}
+.set-chk.on svg{stroke:#0a0a0a}
+.ex-tip{font-size:12px;color:var(--t3);font-style:italic;line-height:1.5;padding-top:8px;border-top:1px solid var(--bd);margin-top:4px}
+.deep-q{background:linear-gradient(135deg,rgba(184,164,248,.1),rgba(122,184,240,.07));border:1px solid rgba(184,164,248,.22);border-radius:var(--r);padding:14px 16px;margin-bottom:12px}
+.dq-eye{font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--purple);margin-bottom:6px}
+.dq-text{font-family:var(--serif);font-size:16px;color:var(--t);line-height:1.5;font-style:italic}
+.mood-row{display:flex;gap:6px;margin-bottom:12px}
+.mood-btn{flex:1;padding:10px 2px;border:1px solid var(--bd2);border-radius:var(--r2);background:var(--bg3);font-size:20px;text-align:center;cursor:pointer}
+.mood-btn.on{border-color:var(--green);background:rgba(200,240,122,.1)}
+.je{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;margin-bottom:8px;cursor:pointer}
+.je-body{display:none;padding:0 14px 12px;border-top:1px solid var(--bd)}
+.je.open .je-body{display:block}
+.je-section{font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--t3);margin:10px 0 4px}
+.je-text{font-size:13px;color:var(--t2);line-height:1.6}
+.life-goal{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;margin-bottom:12px}
+.lg-banner{padding:18px 16px 14px;cursor:pointer}
+.lg-cat{font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.lg-name{font-family:var(--serif);font-size:20px;line-height:1.3;color:var(--t);margin-bottom:6px}
+.lg-desc{font-size:13px;color:var(--t2);line-height:1.5;margin-bottom:10px}
+.lg-prog-row{display:flex;align-items:center;gap:8px}
+.lg-ptrack{flex:1;height:3px;background:var(--bg4);border-radius:2px;overflow:hidden}
+.lg-pbar{height:100%;border-radius:2px;transition:width .4s}
+.lg-pct{font-size:11px;color:var(--t3);width:32px;text-align:right;flex-shrink:0}
+.lg-body{display:none;border-top:1px solid var(--bd);padding:14px 16px}
+.life-goal.open .lg-body{display:block}
+.next-step{display:flex;gap:10px;padding:8px 12px;background:var(--bg3);border-radius:var(--r2);margin-bottom:6px;align-items:flex-start;cursor:pointer;-webkit-user-select:none;user-select:none}
+.ns-chk{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--bd2);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.next-step.done-step .ns-chk{background:var(--green);border-color:var(--green)}
+.ns-chk svg{width:9px;height:9px;stroke:#0a0a0a;stroke-width:2.5;fill:none;opacity:0}
+.next-step.done-step .ns-chk svg{opacity:1}
+.ns-text{font-size:13px;color:var(--t2);line-height:1.5}
+.next-step.done-step .ns-text{text-decoration:line-through;color:var(--t3)}
+.chat-bubble{padding:10px 13px;border-radius:var(--r);margin-bottom:8px;font-size:13px;line-height:1.6}
+.cb-user{background:rgba(200,240,122,.12);border:1px solid rgba(200,240,122,.2);color:var(--t);margin-left:8%}
+.cb-ai{background:var(--bg3);border:1px solid var(--bd2);color:var(--t2)}
+.typing{display:flex;gap:4px;padding:10px 13px;background:var(--bg3);border:1px solid var(--bd2);border-radius:var(--r);margin-bottom:8px;width:60px}
+.typing span{width:6px;height:6px;border-radius:50%;background:var(--t3);animation:bounce .9s infinite}
+.typing span:nth-child(2){animation-delay:.15s}.typing span:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+.book-card{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;margin-bottom:10px;cursor:pointer}
+.bc-head{padding:13px 14px;display:flex;gap:12px;align-items:flex-start}
+.bc-cover{width:44px;height:62px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;background:var(--bg3)}
+.bc-meta{flex:1;min-width:0}
+.bc-title{font-size:14px;font-weight:500;color:var(--t);margin-bottom:2px}
+.bc-author{font-size:12px;color:var(--t3);margin-bottom:5px}
+.bc-body{display:none;padding:0 14px 14px;border-top:1px solid var(--bd)}
+.book-card.open .bc-body{display:block}
+.supp-card{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);padding:12px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;margin-bottom:8px;-webkit-user-select:none;user-select:none}
+.supp-card.taken{border-color:rgba(143,212,168,.35);background:rgba(143,212,168,.05)}
+.supp-ico{font-size:22px;width:32px;text-align:center;flex-shrink:0}
+.supp-info{flex:1}.supp-name{font-size:14px;font-weight:500;color:var(--t);margin-bottom:2px}
+.supp-desc{font-size:12px;color:var(--t2)}.supp-time{font-size:11px;color:var(--t3);margin-top:2px}
+.supp-chk{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--bd2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.supp-card.taken .supp-chk{background:var(--teal);border-color:var(--teal)}
+.supp-chk svg{width:11px;height:11px;stroke:#0a0a0a;stroke-width:2.5;fill:none;opacity:0}
+.supp-card.taken .supp-chk svg{opacity:1}
+</style>
+</head>
+<body>
+<div id="s-dash" class="screen on"></div>
+<div id="s-food" class="screen"></div>
+<div id="s-train" class="screen"></div>
+<div id="s-journal" class="screen"></div>
+<div id="s-goals" class="screen"></div>
+<div id="s-notes" class="screen"></div>
+<nav class="nav"><div class="nav-inner">
+  <button class="nb on" id="nb-dash" onclick="go('dash',this)"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Heute</button>
+  <button class="nb" id="nb-food" onclick="go('food',this)"><svg viewBox="0 0 24 24"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>Ernährung</button>
+  <button class="nb" id="nb-train" onclick="go('train',this)"><svg viewBox="0 0 24 24"><path d="M6 4v16M18 4v16M6 12h12M2 7h4M18 7h4M2 17h4M18 17h4"/></svg>Training</button>
+  <button class="nb" id="nb-journal" onclick="go('journal',this)"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>Journal</button>
+  <button class="nb" id="nb-goals" onclick="go('goals',this)"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Vision</button>
+  <button class="nb" id="nb-notes" onclick="go('notes',this)"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>Notizen</button>
+</div></nav>
+<script>
+const QUOTES=[
+  {t:"Du wirst nicht bestimmt durch das was dir passiert, sondern durch das was du daraus machst.",s:"Epiktet"},
+  {t:"Verliere nicht die Zeit damit dein Leben zu planen. Lebe es.",s:"Marc Aurel"},
+  {t:"Disziplin bedeutet: wählen zwischen dem was du jetzt willst und dem was du am meisten willst.",s:"Abraham Lincoln"},
+  {t:"Ein ruhiger Geist bringt Stärke in Handlungen.",s:"Lao Tzu"},
+  {t:"Wer aufgehört hat besser werden zu wollen, hat aufgehört gut zu sein.",s:"Oliver Cromwell"},
+  {t:"Das Einzige was du wirklich kontrollieren kannst, ist deine eigene Reaktion.",s:"Marc Aurel"},
+  {t:"Der beste Zeitpunkt um anzufangen war gestern. Der zweitbeste ist jetzt.",s:"Unbekannt"},
+];
+const DAILY_QS=[
+  {cat:"🧠 Denkaufgabe",q:"Wenn du dir selbst als Fremder begegnen würdest – was würde dich überraschen?"},
+  {cat:"🌍 Perspektive",q:"Welches Problem von heute wird in 5 Jahren noch eine Rolle spielen?"},
+  {cat:"😌 Stoisch",q:"Was beschäftigt dich gerade, das komplett außerhalb deiner Kontrolle liegt?"},
+  {cat:"💡 Kreativ",q:"Wenn du eine Woche lang nicht scheitern könntest – was würdest du ausprobieren?"},
+  {cat:"🎲 Zufall",q:"Beschreibe deinen heutigen Tag in genau 6 Wörtern."},
+  {cat:"📚 Lernen",q:"Was hast du in den letzten 7 Tagen wirklich Neues gelernt?"},
+  {cat:"🔥 Wachstum",q:"Was vermeidest du gerade, das dich weiterbringen würde?"},
+  {cat:"🌀 Tiefe",q:"Wo warst du heute öfter – in Pflicht oder in echtem Interesse?"},
+  {cat:"🤔 Philosophisch",q:"Wenn dein heutiges Selbst in 10 Jahren zurückblickt – worüber freut es sich am meisten?"},
+  {cat:"⚡ Energie",q:"Was gibt dir gerade echte Energie – und was kostet sie nur?"},
+  {cat:"🎯 Fokus",q:"Was ist die eine Sache, die alles andere einfacher oder überflüssig macht?"},
+  {cat:"🎬 Kultur",q:"Welches Buch, welcher Film oder welche Idee verfolgt dich gerade – und warum?"},
+  {cat:"🔄 Muster",q:"Was tust du immer wieder, obwohl du weißt dass es dir nicht dient?"},
+  {cat:"🌱 Natur",q:"Wie viel Zeit warst du heute in Bewegung oder im Freien? Was hat das verändert?"},
+];
+const SNACK_DAYS=[
+  [{ico:"🍎",n:"Apfel + Erdnussbutter",d:"1 Apfel in Scheiben, 1 EL Erdnussbutter. Ballaststoffe + gesunde Fette.",ps:["~180 kcal","5g Prot.","Ballaststoffe"]},{ico:"🥛",n:"Skyr pur (150g)",d:"Schnellster Protein-Boost. Direkt aus dem Becher.",ps:["~100 kcal","18g Prot.","Low Fat"]},{ico:"🍫",n:"Dunkle Schokolade (2 Riegel)",d:"70%+ Kakao. Echtes Magnesium + Antioxidantien.",ps:["~100 kcal","Magnes.","Antioxid."]}],
+  [{ico:"🥒",n:"Gurke mit Hüttenkäse",d:"½ Gurke + 100g Hüttenkäse als Dip. Viel Wasser + Protein.",ps:["~90 kcal","14g Prot.","Hydration"]},{ico:"🍌",n:"Banane vor dem Training",d:"Schnelle Energie 30–45 Min vor dem Gym. Kalium gegen Krämpfe.",ps:["~100 kcal","Kalium","Pre-Workout"]},{ico:"🥜",n:"Cashews (25g)",d:"Magnesium, Zink, gesunde Fette. Maßvoll genießen.",ps:["~140 kcal","4g Prot.","Magnes."]}],
+  [{ico:"🫐",n:"Beeren mit Naturjoghurt",d:"Handvoll TK-Beeren aufgetaut + 150g Joghurt. Antioxidantien + Probiotika.",ps:["~150 kcal","7g Prot.","Antioxid."]},{ico:"🥚",n:"2 hartgekochte Eier",d:"Vollständiges Protein. Vorbereiten + mitnehmen.",ps:["~160 kcal","12g Prot.","Portable"]},{ico:"🍯",n:"Reiswaffel mit Honig",d:"2 Reiswaffeln + ½ TL Honig. Leicht, wenig Kalorien.",ps:["~110 kcal","1g Prot.","Low Cal"]}],
+  [{ico:"🥑",n:"Avocado mit Salz & Zitrone",d:"½ Avocado, Meersalz, Zitrone. Gesunde Fette, langer Sättigungseffekt.",ps:["~120 kcal","Omega-9","Vit. E"]},{ico:"🧀",n:"Hüttenkäse mit Gurke",d:"100g Hüttenkäse + Gurkenscheiben. Casein sättigt lange.",ps:["~90 kcal","14g Prot.","Casein"]},{ico:"🍊",n:"Mandarine + Walnüsse",d:"1–2 Mandarinen + 20g Walnüsse. Vitamin C + Omega-3.",ps:["~160 kcal","Vit. C","Omega-3"]}],
+  [{ico:"🥕",n:"Karottensticks + Hummus",d:"200g Karottensticks + 2 EL Hummus. Beta-Carotin + pflanzliches Protein.",ps:["~120 kcal","4g Prot.","Beta-Carotin"]},{ico:"🥛",n:"Magerquark mit Zimt",d:"150g Quark, Zimt, ½ TL Honig. Casein + Blutzucker stabilisierend.",ps:["~110 kcal","18g Prot.","Low Cal"]},{ico:"🍓",n:"Erdbeeren + dunkle Schokolade",d:"Handvoll Erdbeeren + 1 Riegel 70%+ Schokolade.",ps:["~110 kcal","Vit. C","Antioxid."]}],
+  [{ico:"🍌",n:"Toast mit Erdnussbutter & Banane",d:"1 Scheibe Vollkorntoast, 1 EL EB, ½ Banane. Pre-Workout Boost.",ps:["~220 kcal","7g Prot.","Pre-Workout"]},{ico:"🥜",n:"Mandeln (30g)",d:"Reich an Vitamin E und Magnesium. Ideal als Schreibtisch-Snack.",ps:["~170 kcal","6g Prot.","Vit. E"]},{ico:"🫙",n:"Joghurt-Granola-Shot",d:"100g Joghurt + 2 EL Granola. Kleiner Energie-Boost.",ps:["~170 kcal","7g Prot.","Energie"]}],
+  [{ico:"🍎",n:"Apfel + Käsescheibe",d:"1 Apfel + 1–2 Scheiben Gouda. Frucht + Protein.",ps:["~170 kcal","8g Prot.","Calcium"]},{ico:"🥚",n:"Spiegelei auf Reiswaffel",d:"1 Ei auf 1 Reiswaffel. Warm, schnell, sättigend.",ps:["~130 kcal","8g Prot.","Schnell"]},{ico:"☕",n:"Kakao mit Vollmilch",d:"200ml Milch + 1 TL Kakaopulver + Honig. Warm, wohltuend.",ps:["~140 kcal","7g Prot.","Magnes."]}],
+];
+const ND=[
+  {short:"Di 10.",full:"Dienstag, 10. Juni",shopDay:0,meals:[
+    {type:"fr",ico:"☀️",lbl:"Frühstück",
+     main:{name:"Scrambled Eggs auf Vollkorntoast",desc:"Cremige Rühreier – langsam gegart, butterweich.",ing:["3 Eier","2 Scheiben Vollkorntoast","1 TL Butter","Salz, Pfeffer"],steps:["Eier mit Salz und Pfeffer verquirlen.","Butter in Pfanne bei mittlerer Hitze schmelzen.","Langsam von außen nach innen rühren.","Noch cremig vom Herd. Auf Toast."],kcal:410,prot:30,carb:32,fat:16,fiber:4,vitC:3,vitD:2.4,vitB12:1.5,vitA:180,fe:3.2,ca:80,mg:28,zn:2.8},
+     alt:{name:"Skyr mit Granola & Banane",desc:"200g Skyr, 3 EL Granola, ½ Banane, Honig. 3 Minuten.",ing:["200g Skyr natur","3 EL Granola","½ Banane","1 TL Honig"],steps:["Skyr in Schüssel. Granola + Banane drauf. Honig."],kcal:380,prot:25,carb:52,fat:6,fiber:3,vitC:6,vitD:0,vitB12:1.2,vitA:20,fe:1.2,ca:220,mg:32,zn:1.4}},
+    {type:"ma",ico:"🍳",lbl:"Hauptmahlzeit",prep:"Di + Mi Lunchbox",
+     main:{name:"Hähnchen-Reis-Pfanne mit Paprika & Zucchini",desc:"Meal-Prep-Klassiker. Hälfte für Mittwoch einpacken.",ing:["500g Hähnchenbrust","1 rote Paprika","1 Zucchini","1 Zwiebel","2 Knoblauchzehen","200g brauner Reis","Olivenöl, Paprikapulver, Salz"],steps:["Reis kochen (25 Min).","Hähnchen würfeln, würzen, goldbraun braten.","Gemüse dazu – 5 Min. Reis untermischen.","Hälfte für Mi kalt stellen."],kcal:650,prot:55,carb:62,fat:12,fiber:5,vitC:85,vitD:0.2,vitB12:0.4,vitA:120,fe:2.8,ca:45,mg:75,zn:2.2},
+     alt:{name:"Puten-Süßkartoffel-Pfanne",desc:"Pute magerer, Süßkartoffeln Beta-Carotin. 2 Tage.",ing:["400g Putengeschnetzeltes","300g Süßkartoffeln","200g TK-Brokkoli","Curry, Olivenöl"],steps:["Süßkartoffeln 5 Min vorkochen.","Pute anbraten, Gemüse dazu, 5 Min."],kcal:620,prot:50,carb:58,fat:10,fiber:7,vitC:92,vitD:0,vitB12:0.3,vitA:980,fe:3.1,ca:65,mg:82,zn:3.1}},
+    {type:"ab",ico:"🌙",lbl:"Abendbrot",
+     main:{name:"Vollkornbrot mit Hüttenkäse & Gemüse",desc:"Leicht, kalt, kein Kochen. Protein ohne viele Kalorien.",ing:["3 Scheiben Vollkornbrot","150g Hüttenkäse","1 Tomate","½ Gurke","Schnittlauch"],steps:["Hüttenkäse aufs Brot. Tomate + Gurke drauf. Würzen."],kcal:310,prot:24,carb:36,fat:5,fiber:6,vitC:18,vitD:0,vitB12:0.6,vitA:60,fe:2.1,ca:110,mg:42,zn:1.8},
+     alt:{name:"Rührei mit Toast (2 Eier)",desc:"Wenn der Hunger größer ist nach dem Leg-Tag.",ing:["2 Eier","1–2 Scheiben Vollkorntoast","Butter"],steps:["Eier cremig rühren. Auf Toast."],kcal:290,prot:20,carb:26,fat:12,fiber:3,vitC:0,vitD:1.6,vitB12:1.0,vitA:120,fe:2.2,ca:65,mg:22,zn:2.0}}
+  ]},
+  {short:"Mi 11.",full:"Mittwoch, 11. Juni",shopDay:0,meals:[
+    {type:"fr",ico:"☀️",lbl:"Frühstück (to-go)",
+     main:{name:"Skyr-Bowl to-go im Glas",desc:"2 Min, einfach mitnehmen.",ing:["200g Skyr natur","3 EL Granola","½ Banane","1 TL Honig"],steps:["Skyr ins Glas. Granola + Banane drauf. Deckel."],kcal:380,prot:25,carb:52,fat:6,fiber:3,vitC:6,vitD:0,vitB12:1.2,vitA:20,fe:1.2,ca:220,mg:32,zn:1.4},
+     alt:{name:"Toast mit Erdnussbutter & Banane",desc:"Sättigt lange, ideal für Office-Tag.",ing:["2 Scheiben Vollkorntoast","1 EL Erdnussbutter","½ Banane"],steps:["Toasten, bestreichen, Banane drauf."],kcal:420,prot:14,carb:58,fat:14,fiber:6,vitC:5,vitD:0,vitB12:0,vitA:8,fe:1.8,ca:40,mg:48,zn:1.0}},
+    {type:"ma",ico:"📦",lbl:"Lunchbox (Reste Di)",prep:"Meal Prep",
+     main:{name:"Hähnchen-Reis-Pfanne (Reste Di)",desc:"Im Büro aufwärmen. 0 Min Aufwand.",ing:["Reste der Di-Pfanne (1 Portion)"],steps:["Di Abend portionieren. Büro: 2–3 Min Mikrowelle."],kcal:650,prot:55,carb:62,fat:12,fiber:5,vitC:85,vitD:0.2,vitB12:0.4,vitA:120,fe:2.8,ca:45,mg:75,zn:2.2},
+     alt:{name:"Vollkornbrot-Box mit Hüttenkäse",desc:"Kein Aufwärmen nötig.",ing:["3 Scheiben Vollkornbrot","150g Hüttenkäse","Tomate, Gurke"],steps:["Abends vorbereiten und einpacken."],kcal:310,prot:24,carb:36,fat:5,fiber:6,vitC:18,vitD:0,vitB12:0.6,vitA:60,fe:2.1,ca:110,mg:42,zn:1.8}},
+    {type:"ab",ico:"🌙",lbl:"Abendbrot",
+     main:{name:"Joghurt-Bowl mit Granola & Beeren",desc:"Leichtes Abendessen, kein Kochen.",ing:["200g Naturjoghurt","3 EL Granola","Handvoll TK-Beeren","1 TL Honig"],steps:["Beeren auftauen. Alles zusammengeben."],kcal:340,prot:14,carb:52,fat:8,fiber:4,vitC:16,vitD:0,vitB12:1.0,vitA:30,fe:1.4,ca:240,mg:28,zn:1.0},
+     alt:{name:"Rührei mit Käse (2 Eier)",desc:"Warm und schnell.",ing:["2 Eier","1 EL geriebener Käse","Butter"],steps:["Eier + Käse cremig rühren."],kcal:265,prot:19,carb:1,fat:20,fiber:0,vitC:0,vitD:1.8,vitB12:1.2,vitA:185,fe:1.8,ca:110,mg:14,zn:2.2}}
+  ]},
+  {short:"Do 12.",full:"Donnerstag, 12. Juni",shopDay:0,meals:[
+    {type:"fr",ico:"☀️",lbl:"Frühstück",
+     main:{name:"Rührei mit Avocado auf Toast",desc:"Gute Fette + Protein. Ideal als Kochtag-Start.",ing:["3 Eier","2 Scheiben Vollkorntoast","½ Avocado","Chiliflocken"],steps:["Eier cremig rühren. Toast rösten. Avocado + Rührei drauf."],kcal:480,prot:28,carb:34,fat:26,fiber:7,vitC:9,vitD:2.4,vitB12:1.5,vitA:180,fe:3.4,ca:68,mg:52,zn:2.8},
+     alt:{name:"Overnight Oats mit Apfel & Zimt",desc:"Abends vorbereiten, morgens fertig.",ing:["80g Haferflocken","200ml Vollmilch","½ Apfel gerieben","Zimt","Honig"],steps:["Alles am Vorabend mischen. Kühlschrank. Morgens essen."],kcal:390,prot:14,carb:62,fat:8,fiber:6,vitC:3,vitD:1.2,vitB12:0.8,vitA:60,fe:3.8,ca:230,mg:60,zn:2.0}},
+    {type:"ma",ico:"🍛",lbl:"Hauptmahlzeit",prep:"Do + Fr",
+     main:{name:"Rotes Linsen-Hackfleisch-Curry",desc:"Schmeckt aufgewärmt noch besser. Gleich doppelt kochen.",ing:["400g Rinderhack","250g rote Linsen","500g passierte Tomaten","200ml Kokosmilch","1 Zwiebel","2 Knoblauchzehen","Curry, Kreuzkümmel","200g Basmatireis"],steps:["Reis kochen. Zwiebel + Knoblauch anschwitzen.","Hack anbraten. Linsen + Tomaten + Kokosmilch + Gewürze.","20 Min köcheln. Hälfte für Fr kalt stellen."],kcal:700,prot:52,carb:78,fat:18,fiber:12,vitC:22,vitD:0.4,vitB12:2.8,vitA:80,fe:6.8,ca:75,mg:110,zn:6.2},
+     alt:{name:"Gebackene Hähnchenkeulen mit Ofengemüse",desc:"40 Min Ofen, macht sich fast von selbst.",ing:["2 Hähnchenkeulen (~400g)","2 Kartoffeln","1 Paprika","Olivenöl, Rosmarin"],steps:["Alles würzen, auf Blech. Ofen 200°, 40 Min."],kcal:620,prot:48,carb:45,fat:18,fiber:5,vitC:70,vitD:0.2,vitB12:0.4,vitA:90,fe:3.2,ca:50,mg:65,zn:3.0}},
+    {type:"ab",ico:"🌙",lbl:"Abendbrot",
+     main:{name:"Skyr mit Nüssen & Honig",desc:"Leicht, viel Protein – perfekt als Abschluss.",ing:["200g Skyr","1 EL gemischte Nüsse","½ TL Honig"],steps:["Skyr in Schüssel. Nüsse + Honig drauf."],kcal:230,prot:24,carb:14,fat:8,fiber:1,vitC:1,vitD:0,vitB12:1.2,vitA:20,fe:0.8,ca:240,mg:26,zn:1.6},
+     alt:{name:"Vollkornbrot mit Erdnussbutter & Banane",desc:"Mehr Carbs für den nächsten Morgen.",ing:["2 Scheiben Vollkornbrot","1 EL Erdnussbutter","½ Banane"],steps:["Aufstreichen, Banane drauf."],kcal:340,prot:11,carb:48,fat:12,fiber:5,vitC:5,vitD:0,vitB12:0,vitA:8,fe:1.6,ca:32,mg:44,zn:0.9}}
+  ]},
+  {short:"Fr 13.",full:"Freitag, 13. Juni",shopDay:0,meals:[
+    {type:"fr",ico:"☀️",lbl:"Frühstück",
+     main:{name:"Joghurt-Granola-Bowl mit Beeren",desc:"Leicht und frisch zum Wochenende.",ing:["200g Naturjoghurt 3,5%","3 EL Granola","Handvoll TK-Beeren","1 TL Honig"],steps:["Beeren auftauen. Joghurt + Granola + Beeren + Honig."],kcal:370,prot:14,carb:54,fat:9,fiber:4,vitC:18,vitD:0.2,vitB12:0.8,vitA:30,fe:1.4,ca:195,mg:28,zn:1.0},
+     alt:{name:"Spiegelei mit Toast & Tomate",desc:"Klassisch, 10 Minuten.",ing:["2 Eier","2 Scheiben Vollkorntoast","1 Tomate","Butter"],steps:["Butter erhitzen. Eier stocken lassen. Toast rösten."],kcal:370,prot:22,carb:32,fat:16,fiber:4,vitC:14,vitD:1.6,vitB12:1.0,vitA:160,fe:2.8,ca:65,mg:30,zn:2.4}},
+    {type:"ma",ico:"📦",lbl:"Hauptmahlzeit",prep:"Reste Do",
+     main:{name:"Linsen-Curry (Reste Do)",desc:"Aufgewärmt noch intensiver.",ing:["Reste Do-Curry","ggf. frischer Reis"],steps:["Im Topf aufwärmen, Schuss Wasser dazu."],kcal:700,prot:52,carb:78,fat:18,fiber:12,vitC:22,vitD:0.4,vitB12:2.8,vitA:80,fe:6.8,ca:75,mg:110,zn:6.2},
+     alt:{name:"Thunfisch-Vollkornnudeln",desc:"15 Min, sehr günstig.",ing:["150g Vollkornnudeln","1 Dose Thunfisch","200g passierte Tomaten","2 Knoblauchzehen"],steps:["Nudeln kochen. Soße: Knoblauch + Tomaten 5 Min. Thunfisch. Mischen."],kcal:570,prot:44,carb:72,fat:10,fiber:8,vitC:18,vitD:2.0,vitB12:3.2,vitA:40,fe:3.5,ca:55,mg:80,zn:2.0}},
+    {type:"ab",ico:"🌙",lbl:"Abendbrot",
+     main:{name:"Vollkornbrot mit Hüttenkäse & Gurke",desc:"Leicht, Fr kann entspannt sein.",ing:["3 Scheiben Vollkornbrot","150g Hüttenkäse","½ Gurke","Schnittlauch"],steps:["Hüttenkäse aufs Brot. Gurke drauf."],kcal:290,prot:22,carb:34,fat:4,fiber:6,vitC:6,vitD:0,vitB12:0.6,vitA:30,fe:1.8,ca:105,mg:38,zn:1.6},
+     alt:{name:"Rührei mit Tomaten (2 Eier)",desc:"Warm, wenn Lust.",ing:["2 Eier","1 Tomate","Butter"],steps:["Tomate anbraten. Eier dazu, cremig."],kcal:240,prot:16,carb:6,fat:16,fiber:1,vitC:12,vitD:1.6,vitB12:1.0,vitA:180,fe:2.4,ca:60,mg:18,zn:2.0}}
+  ]},
+  {short:"Sa 14.",full:"Samstag, 14. Juni",shopDay:1,meals:[
+    {type:"fr",ico:"☀️",lbl:"Frühstück",
+     main:{name:"Herzhaft-süßer French Toast",desc:"Vollkorntoast in Ei-Milch-Mischung gebraten. Wochenend-Ritual.",ing:["2 Scheiben Vollkorntoast","2 Eier","3 EL Milch","Butter","Joghurt + Beeren + Honig"],steps:["Ei + Milch verquirlen. Toast einweichen.","In Butter goldbraun braten.","Mit Joghurt + Beeren + Honig."],kcal:450,prot:22,carb:50,fat:16,fiber:5,vitC:10,vitD:2.0,vitB12:1.4,vitA:190,fe:2.8,ca:130,mg:36,zn:2.4},
+     alt:{name:"Smoothie mit Skyr, Spinat & Banane",desc:"150g Skyr + TK-Spinat + Banane + 200ml Milch.",ing:["150g Skyr","1 Handvoll TK-Spinat","1 Banane","200ml Vollmilch"],steps:["Alles in Mixer, 30 Sekunden."],kcal:355,prot:26,carb:52,fat:5,fiber:4,vitC:18,vitD:1.2,vitB12:1.4,vitA:320,fe:2.1,ca:310,mg:58,zn:1.8}},
+    {type:"ma",ico:"🍔",lbl:"Hauptmahlzeit",
+     main:{name:"Selbstgemachter Burger mit Gurkensalat",desc:"Push-Tag Highlight. Deutlich besser als Fast Food.",ing:["200g Rinderhack","1 Vollkornbrötchen","Tomate, Rucola, rote Zwiebel","½ Gurke + Essig","Senf"],steps:["Hack würzen, Patty formen. 3–4 Min je Seite.","Brötchen anrösten. Gurkensalat machen. Zusammenbauen."],kcal:680,prot:44,carb:52,fat:28,fiber:6,vitC:20,vitD:0.6,vitB12:3.0,vitA:80,fe:4.5,ca:70,mg:55,zn:5.8},
+     alt:{name:"Lachs aus dem Ofen mit Süßkartoffeln",desc:"2 Lachsfilets, Senf drauf, 20 Min bei 200°.",ing:["2 Lachsfilets (TK)","2 TL Senf","300g Süßkartoffeln","Dill"],steps:["Ofen 200°. Süßkartoffeln + Lachs auf Blech. 20–22 Min."],kcal:580,prot:48,carb:44,fat:18,fiber:5,vitC:16,vitD:12.0,vitB12:5.2,vitA:820,fe:2.2,ca:70,mg:72,zn:2.2}},
+    {type:"ab",ico:"🌙",lbl:"Abendbrot",
+     main:{name:"Magerquark mit Beeren & Nüssen",desc:"Leicht und proteinreich nach dem Push-Tag.",ing:["200g Magerquark","Handvoll TK-Beeren","1 EL Nüsse","1 TL Honig"],steps:["Beeren auftauen. Auf Quark. Nüsse + Honig."],kcal:235,prot:28,carb:16,fat:6,fiber:3,vitC:14,vitD:0,vitB12:0.8,vitA:20,fe:0.8,ca:200,mg:28,zn:1.8},
+     alt:{name:"Joghurt-Granola-Bowl",desc:"Wenn mehr Hunger nach dem Training.",ing:["200g Naturjoghurt","2 EL Granola","Beeren","Honig"],steps:["Alles zusammengeben."],kcal:320,prot:12,carb:46,fat:8,fiber:3,vitC:14,vitD:0.2,vitB12:0.8,vitA:30,fe:1.2,ca:200,mg:24,zn:0.9}}
+  ]},
+  {short:"So 15.",full:"Sonntag, 15. Juni",shopDay:1,meals:[
+    {type:"fr",ico:"☀️",lbl:"Frühstück",
+     main:{name:"Rührei mit Käse & Kräutern auf Toast",desc:"3 Eier + Käse + Kräuter. Entspanntes Sonntagsfrühstück vor Pull.",ing:["3 Eier","1 EL geriebener Käse","2 Scheiben Vollkorntoast","Schnittlauch","Butter"],steps:["Eier + Käse verquirlen. Cremig rühren. Kräuter dazu. Auf Toast."],kcal:440,prot:30,carb:32,fat:20,fiber:4,vitC:5,vitD:2.4,vitB12:1.8,vitA:210,fe:3.0,ca:130,mg:30,zn:3.0},
+     alt:{name:"Overnight Oats (Sa Abend vorbereitet)",desc:"Einfach aus dem Kühlschrank.",ing:["80g Haferflocken","200ml Milch","½ Apfel","Zimt","Honig"],steps:["Sa Abend vorbereiten. So Morgen essen."],kcal:390,prot:14,carb:62,fat:8,fiber:6,vitC:3,vitD:1.2,vitB12:0.8,vitA:60,fe:3.8,ca:230,mg:60,zn:2.0}},
+    {type:"ma",ico:"🍲",lbl:"Hauptmahlzeit",
+     main:{name:"Hühnerbrühe-Gemüsesuppe mit Nudeln",desc:"Leicht und wohltuend – vor dem Pull-Training.",ing:["2 Hühnerbrühwürfel","1 Karotte","1 Lauchstange","Suppengrün","100g Vollkornnudeln"],steps:["Brühe aufkochen. Gemüse rein, 15 Min. Nudeln dazu, 8–10 Min."],kcal:420,prot:22,carb:62,fat:6,fiber:8,vitC:24,vitD:0,vitB12:0.2,vitA:480,fe:3.2,ca:75,mg:52,zn:1.4},
+     alt:{name:"Gemüse-Frittata",desc:"4 Eier + Gemüse + Käse. 20 Minuten.",ing:["4 Eier","½ Paprika","½ Zucchini","1 EL Käse","Olivenöl"],steps:["Gemüse anbraten. Eimasse drüber. Käse. Ofen 180°, 8–10 Min."],kcal:380,prot:28,carb:12,fat:24,fiber:3,vitC:42,vitD:3.2,vitB12:2.0,vitA:280,fe:3.6,ca:160,mg:40,zn:3.4}},
+    {type:"ab",ico:"🌙",lbl:"Abendbrot",
+     main:{name:"Vollkornbrot mit Skyr & Tomate",desc:"Leicht – und Mo wieder einkaufen!",ing:["2 Scheiben Vollkornbrot","100g Skyr","1 Tomate","Schnittlauch"],steps:["Skyr aufs Brot. Tomate drauf."],kcal:240,prot:18,carb:28,fat:3,fiber:4,vitC:12,vitD:0,vitB12:0.8,vitA:40,fe:1.6,ca:130,mg:28,zn:1.2},
+     alt:{name:"Rührei mit Paprika (2 Eier)",desc:"Warm, schnell nach Pull.",ing:["2 Eier","¼ Paprika","Butter"],steps:["Paprika anbraten. Eier dazu, cremig."],kcal:230,prot:15,carb:4,fat:16,fiber:1,vitC:28,vitD:1.6,vitB12:1.0,vitA:140,fe:2.2,ca:52,mg:16,zn:2.0}}
+  ]}
+];
+const SHOP=[
+  {day:"Mo, 9. Juni",sub:"Für Di–Fr · Frühstücke & Snacks",budget:"35–45 €",cats:[
+    {t:"Fleisch & Protein",i:"🥩",items:[{n:"Hähnchenbrust",p:"500g (~3,20€)"},{n:"Rinderhack / Putengehack",p:"400g (~3,00€)"},{n:"Eier",p:"10er Pack (~2,50€)"},{n:"Thunfisch in Wasser (Dose)",p:"2 Dosen (~2,20€)"}]},
+    {t:"Milch & Frische",i:"🥛",items:[{n:"Skyr natur",p:"500g (~1,69€)"},{n:"Magerquark",p:"500g (~1,20€)"},{n:"Naturjoghurt 3,5%",p:"500g (~1,19€)"},{n:"Hüttenkäse",p:"200g (~1,29€)"},{n:"Vollmilch",p:"1 Liter (~1,29€)"},{n:"Käse gerieben",p:"150g (~1,49€)"}]},
+    {t:"Kohlenhydrate",i:"🌾",items:[{n:"Haferflocken",p:"500g (~1,09€)"},{n:"Brauner Reis",p:"1 kg (~1,79€)"},{n:"Basmatireis",p:"500g (~1,29€)"},{n:"Vollkorntoast",p:"1 Pack (~1,49€)"},{n:"Rote Linsen",p:"500g (~1,49€)"},{n:"Vollkornnudeln",p:"500g (~1,29€)"},{n:"Passierte Tomaten",p:"500g (~0,99€)"},{n:"Kokosmilch (Tetra)",p:"200ml (~1,29€)"}]},
+    {t:"Gemüse & Obst",i:"🥦",items:[{n:"Paprika rot (3er)",p:"~1,79€"},{n:"Zucchini",p:"2 Stk. (~1,29€)"},{n:"Zwiebeln",p:"1 kg Netz (~1,19€)"},{n:"Knoblauch",p:"1 Knolle (~0,69€)"},{n:"Cherrytomaten",p:"250g (~1,49€)"},{n:"Gurke",p:"1 Stk. (~0,99€)"},{n:"Bananen",p:"1 Bund (~1,49€)"},{n:"Äpfel",p:"1 kg (~1,79€)"},{n:"TK-Beeren gemischt",p:"300g (~2,29€)"},{n:"TK-Spinat",p:"450g (~1,49€)"},{n:"Karottensticks",p:"500g (~1,29€)"}]},
+    {t:"Snacks & Frühstück",i:"🥜",items:[{n:"Gemischte Nüsse",p:"200g (~2,49€)"},{n:"Cashews",p:"150g (~2,29€)"},{n:"Mandeln",p:"200g (~2,49€)"},{n:"Granola",p:"375g (~2,99€)"},{n:"Erdnussbutter (100% Nuss)",p:"350g (~2,49€)"},{n:"Reiswaffeln",p:"100g (~1,19€)"},{n:"Dunkle Schokolade 70%+",p:"2x 100g (~2,00€)"}]},
+    {t:"Gewürze & Basics",i:"🧂",items:[{n:"Olivenöl",p:"500ml (~3,99€)"},{n:"Curry + Kreuzkümmel",p:"je ~0,99€"},{n:"Paprikapulver",p:"~0,89€"},{n:"Honig",p:"kl. Glas (~2,49€)"},{n:"Hühnerbrühwürfel",p:"8er Pack (~0,99€)"},{n:"Weißweinessig",p:"kl. Flasche (~1,29€)"},{n:"Senf",p:"kl. Glas (~0,99€)"}]},
+  ]},
+  {day:"Do/Fr, 12./13. Juni",sub:"Für Sa–So · Frisches nachkaufen",budget:"20–30 €",cats:[
+    {t:"Protein & Frisches",i:"🐟",items:[{n:"Lachsfilets TK",p:"2 Stk. (~4,50€)"},{n:"Rinderhack (Burger)",p:"200g (~2,50€)"},{n:"Avocado",p:"1 reife (~1,29€)"},{n:"Eier (falls nötig)",p:"6er Pack (~1,59€)"}]},
+    {t:"Milch & Frische",i:"🥛",items:[{n:"Skyr natur (Nachkauf)",p:"500g (~1,69€)"},{n:"Naturjoghurt",p:"500g (~1,19€)"},{n:"Magerquark (falls nötig)",p:"500g (~1,20€)"}]},
+    {t:"Gemüse & Brot",i:"🥬",items:[{n:"Vollkornbrötchen",p:"4 Stk. (~1,60€)"},{n:"Suppengrün (Bund)",p:"~1,29€"},{n:"Süßkartoffeln",p:"300g (~1,49€)"},{n:"Lauch",p:"1 Stange (~0,99€)"},{n:"Rote Zwiebeln",p:"3 Stk. (~0,79€)"},{n:"Rucola oder Blattsalat",p:"~1,29€"},{n:"Strauchtomaten",p:"2 Stk. (~1,49€)"}]},
+    {t:"Extras & Treats",i:"✨",items:[{n:"Proteinriegel (2–3)",p:"für Office (~3,00€)"},{n:"Frische Beeren (Erdbeeren)",p:"250g (~2,49€)"},{n:"Walnüsse",p:"100g (~1,79€)"}]},
+  ]},
+];
+const TRAINING={
+  legs:{name:"Legs 🦵",day:"Dienstag",focus:"Beine · Rücken · Core",exercises:[
+    {name:"Beinpresse",sets:3,reps:"10–12",tip:"Füße schulterbreit, Zehen leicht nach außen. Knie nicht komplett strecken am Ende."},
+    {name:"Beinbeuger (Maschine)",sets:3,reps:"12–15",tip:"Volle Amplitude. Langsam absenken – der negative Teil ist entscheidend."},
+    {name:"Beinstrecker (Maschine)",sets:3,reps:"12–15",tip:"Volle Streckung oben kurz halten. Nicht zu schwer – Gefühl zählt."},
+    {name:"Rückenstrecker",sets:3,reps:"12–15",tip:"Kontrolliert heben und senken. Kein Schwung. Rücken gerade."},
+    {name:"Crunches",sets:3,reps:"15–20",tip:"Langsam hoch, langsam runter. Nicht mit dem Nacken ziehen."},
+  ]},
+  push:{name:"Push 💪",day:"Samstag",focus:"Brust · Schultern · Trizeps",exercises:[
+    {name:"Brustpresse (Maschine)",sets:3,reps:"10–12",tip:"Schulterblätter zusammenziehen. Ellenbogen nicht überstrecken. Explosiv drücken."},
+    {name:"Seitheben (Kurzhanteln)",sets:3,reps:"12–15",tip:"Leichtes Gewicht, saubere Form. Ellenbogen leicht gebeugt, nicht schwingen."},
+    {name:"Trizepsdrücken (Kabel)",sets:3,reps:"12–15",tip:"Ellenbogen eng am Körper. Volle Streckung unten kurz halten."},
+    {name:"Butterfly (Maschine)",sets:3,reps:"10–12",tip:"Tiefe Dehnung in der Brust. Nicht zu weit zurück gehen."},
+    {name:"Schulterpresse (Maschine)",sets:2,reps:"10–12",tip:"Aufrecht sitzen, kein Hohlkreuz. Kontrolliert absenken."},
+    {name:"Trizepsdrücken über dem Kopf",sets:3,reps:"12–15",tip:"Langer Trizepskopf. Ellenbogen nach oben, nicht nach außen kippen."},
+  ]},
+  pull:{name:"Pull 🔙",day:"Sonntag",focus:"Rücken · Bizeps · Hintere Schulter",exercises:[
+    {name:"Schrägbank Curls",sets:3,reps:"10–12",tip:"Langer Bewegungsweg. Langsam runter – volle Dehnung des Bizeps."},
+    {name:"Rudern eng (Kabel)",sets:3,reps:"10–12",tip:"Ellenbogen eng. Schulterblätter hinten zusammenziehen."},
+    {name:"Klimmzüge mit Unterstützung",sets:3,reps:"8–10",tip:"Brust zur Stange. Breiter Griff. Schulterblätter aktiv."},
+    {name:"Butterfly Reverse (Maschine)",sets:3,reps:"12–15",tip:"Hintere Schulter. Arme gestreckt, Bewegung aus dem Rücken."},
+    {name:"Rudern weit (Kabel)",sets:3,reps:"10–12",tip:"Breiter Griff. Ellenbogen weit nach hinten. Oberer Rücken."},
+    {name:"Latzug (breit)",sets:3,reps:"10–12",tip:"Breiter Griff. Brust raus, Stange zur Oberbrust. Nicht schwingen."},
+  ]}
+};
+const SUPPS=[
+  {ico:"☀️",name:"Vitamin D3",desc:"Knochen, Immunsystem & Muskelkraft.",time:"Morgens zum Frühstück",key:"vitD3"},
+  {ico:"🟡",name:"Vitamin K2",desc:"Arbeitet mit D3 zusammen.",time:"Morgens mit D3",key:"vitK2"},
+  {ico:"🍊",name:"Vitamin C",desc:"Antioxidans, Immunsystem, Eisenaufnahme.",time:"Zu einer Mahlzeit",key:"vitC"},
+  {ico:"⚡",name:"Zink",desc:"Testosteron, Wundheilung, Proteinsynthese.",time:"Abends, nicht mit Eisen",key:"zinc"},
+  {ico:"🏋️",name:"Kreatin",desc:"3–5g täglich – Kraft & Muskelmasse.",time:"Täglich, Zeitpunkt egal",key:"creatin"},
+];
+const DEFAULT_LIFE_GOALS=[
+  {id:"lg1",color:"var(--amber)",cat:"📚 Kultur & Kreation",name:"Blog & YouTube über Bücher, Film & Kultur",desc:"Monatlich ein Buch lesen, analysieren und darüber schreiben oder sprechen. Eigene Stimme entwickeln. Eine Plattform aufbauen.",progress:5,steps:[
+    {id:"lg1s1",text:"YouTube-Kanal erstellen & Kanalkonzept festlegen"},
+    {id:"lg1s2",text:"Erstes Buch des Monats auswählen & Leseplan machen"},
+    {id:"lg1s3",text:"Analyse-Template für Bücher & Filme entwickeln"},
+    {id:"lg1s4",text:"Ersten Blogpost-Entwurf schreiben"},
+    {id:"lg1s5",text:"Erstes YouTube-Video aufnehmen (Handy reicht)"},
+  ]},
+  {id:"lg2",color:"var(--purple)",cat:"🚀 Unternehmen",name:"PR & Marketing Agentur für Influencer",desc:"Eine eigene Agentur aufbauen, die Influencern bei Branding, Kooperationen und Wachstum hilft.",progress:8,steps:[
+    {id:"lg2s1",text:"Zielgruppe definieren: Nische & Influencer-Typ"},
+    {id:"lg2s2",text:"Dienstleistungsliste & erste Preisstruktur erstellen"},
+    {id:"lg2s3",text:"LinkedIn-Profil professionell ausbauen"},
+    {id:"lg2s4",text:"3 potenzielle Kunden identifizieren & kontaktieren"},
+    {id:"lg2s5",text:"Erstes Pilotprojekt abschließen & Referenz einholen"},
+  ]},
+  {id:"lg3",color:"var(--teal)",cat:"💻 Digitales Business",name:"Website-Agentur aufbauen",desc:"Kunden bei modernen Websites helfen. Parallel zur Agentur als zweites Standbein.",progress:3,steps:[
+    {id:"lg3s1",text:"Portfolio-Website mit eigenem Projekt erstellen"},
+    {id:"lg3s2",text:"Pakete & Preise definieren"},
+    {id:"lg3s3",text:"Ersten Kunden gewinnen & Projekt ausführen"},
+    {id:"lg3s4",text:"Bewertung einholen & als Referenz nutzen"},
+  ]},
+  {id:"lg4",color:"var(--coral)",cat:"🌱 Persönliches Wachstum",name:"Körper, Geist & Routinen",desc:"Jeden Tag etwas tun das langfristig wirkt. Die kleinen Dinge zählen.",progress:35,steps:[
+    {id:"lg4s1",text:"Gym-Routine 3 Monate durchhalten"},
+    {id:"lg4s2",text:"12 Bücher in 12 Monaten lesen"},
+    {id:"lg4s3",text:"Tägliches Journal über 30 Tage"},
+    {id:"lg4s4",text:"Supplements konsequent 60 Tage"},
+  ]},
+];
+const DEFAULT_HABIT_GOALS=[
+  {id:"g1",ico:"🏋️",name:"Gym 3x pro Woche",streak:0,subs:[{id:"g1s1",name:"Dienstag: Legs"},{id:"g1s2",name:"Samstag: Push"},{id:"g1s3",name:"Sonntag: Pull"}]},
+  {id:"g2",ico:"🥗",name:"Ernährungsplan einhalten",streak:0,subs:[{id:"g2s1",name:"Frühstück nach Plan"},{id:"g2s2",name:"Hauptmahlzeit nach Plan"},{id:"g2s3",name:"Abendbrot leicht"}]},
+  {id:"g3",ico:"📖",name:"Täglich Journal schreiben",streak:0,subs:[{id:"g3s1",name:"Morgenroutine ausgefüllt"},{id:"g3s2",name:"Abendreflexion ausgefüllt"}]},
+  {id:"g4",ico:"💊",name:"Supplements täglich",streak:0,subs:[{id:"g4s1",name:"D3 + K2 morgens"},{id:"g4s2",name:"Vit C mittags"},{id:"g4s3",name:"Zink + Kreatin"}]},
+];
+const BOOK_TEMPLATE=[
+  {key:"summary",label:"Zusammenfassung",ph:"Worum geht es? Kernaussage in 3–5 Sätzen..."},
+  {key:"insights",label:"Erkenntnisse & Zitate",ph:"Was hat mich überrascht oder bewegt?"},
+  {key:"analysis",label:"Analyse & Interpretation",ph:"Was steckt tiefer dahinter?"},
+  {key:"personal",label:"Persönliche Relevanz",ph:"Was nehme ich für mein Leben mit?"},
+  {key:"content",label:"Ideen für Blog / YouTube",ph:"Welchen Winkel würde ich für einen Post oder ein Video nehmen?"},
+];
+let S={foodDay:0,foodTab:"meals",foodAlt:{},trainSplit:"legs",trainSets:{},trainDoneEx:{},journalMode:"morning",morning:{todos:[],intention:"",deepAnswer:""},evening:{mood:"",sleep:7,good:"",improve:"",thoughts:"",deepAnswer:""},entries:[],suppTaken:{},suppStreak:0,shopChecked:{},lifeGoals:[],lifeStepsDone:{},habitGoals:[],habitSubsDone:{},goalsTab:"vision",books:[],aiTopic:"general",chatHistory:{},apiKey:""};
+function load(){try{const r=localStorage.getItem("la4");if(r)Object.assign(S,JSON.parse(r));}catch(e){}if(!S.lifeGoals||!S.lifeGoals.length)S.lifeGoals=JSON.parse(JSON.stringify(DEFAULT_LIFE_GOALS));if(!S.habitGoals||!S.habitGoals.length)S.habitGoals=JSON.parse(JSON.stringify(DEFAULT_HABIT_GOALS));if(!S.books)S.books=[];if(!S.chatHistory)S.chatHistory={};
+  // Daily reset: if last open was a different day, reset supplements and habit subs
+  const today=new Date().toDateString();
+  if(S.lastOpenDate&&S.lastOpenDate!==today){
+    S.suppTaken={};
+    S.habitSubsDone={};
+    // Check if yesterday all supps were done (streak already counted via checkSuppStreak)
+  }
+  S.lastOpenDate=today;save();
+}
+function save(){try{localStorage.setItem("la4",JSON.stringify(S));}catch(e){}}
+function go(name,btn){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("on"));document.querySelectorAll(".nb").forEach(b=>b.classList.remove("on"));document.getElementById("s-"+name).classList.add("on");(btn||document.getElementById("nb-"+name)).classList.add("on");({dash:renderDash,food:renderFood,train:renderTrain,journal:renderJournal,goals:renderGoals,notes:renderNotes})[name]?.();}
+function renderDash(){
+  const q=QUOTES[new Date().getDay()%QUOTES.length];
+  const dq=DAILY_QS[new Date().getDate()%DAILY_QS.length];
+  const t=totalDay(S.foodDay);
+  const allS=SUPPS.every(s=>S.suppTaken[s.key]);
+  const dow=new Date().getDay();
+  const splitMap={2:"legs",6:"push",0:"pull"};
+  const todaySplit=TRAINING[splitMap[dow]];
+  const doneH=Object.values(S.habitSubsDone).filter(Boolean).length;
+  document.getElementById("s-dash").innerHTML=`
+    <div class="ph"><div class="ph-eye">${new Date().toLocaleDateString("de",{weekday:"long",day:"numeric",month:"long"})}</div><div class="ph-title">Guten <em>Morgen</em> 👋</div></div>
+    <div class="sp" style="padding-top:0">
+      <div style="background:linear-gradient(135deg,rgba(184,164,248,.1),rgba(122,184,240,.07));border:1px solid rgba(184,164,248,.2);border-radius:var(--r);padding:14px 16px;margin-bottom:10px">
+        <div style="font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--purple);margin-bottom:6px">Tagesgedanke</div>
+        <div style="font-family:var(--serif);font-size:15px;color:var(--t);line-height:1.5;font-style:italic;margin-bottom:5px">"${q.t}"</div>
+        <div style="font-size:11px;color:var(--t3)">— ${q.s}</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+        <div class="card" style="margin-bottom:0;cursor:pointer" onclick="go('food',document.getElementById('nb-food'))"><div style="font-size:20px;margin-bottom:5px">🥗</div><div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:2px">Kalorien heute</div><div style="font-size:19px;font-weight:500">${t.kcal}</div><div style="font-size:11px;color:var(--t3);margin-top:1px">${t.prot}g Protein</div></div>
+        <div class="card" style="margin-bottom:0;cursor:pointer" onclick="go('train',document.getElementById('nb-train'))"><div style="font-size:20px;margin-bottom:5px">🏋️</div><div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:2px">${todaySplit?"Training":"Ruhetag"}</div><div style="font-size:${todaySplit?"15":"13"}px;font-weight:500">${todaySplit?todaySplit.name:"Di·Sa·So"}</div><div style="font-size:11px;color:var(--t3);margin-top:1px">${todaySplit?todaySplit.exercises.length+" Übungen":"Erholen 😌"}</div></div>
+        <div class="card" style="margin-bottom:0;cursor:pointer" onclick="go('journal',document.getElementById('nb-journal'))"><div style="font-size:20px;margin-bottom:5px">📓</div><div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:2px">Journal</div><div style="font-size:19px;font-weight:500">${S.entries.length}</div><div style="font-size:11px;color:var(--t3);margin-top:1px">Einträge gesamt</div></div>
+        <div class="card" style="margin-bottom:0;cursor:pointer" onclick="go('goals',document.getElementById('nb-goals'))"><div style="font-size:20px;margin-bottom:5px">🎯</div><div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:2px">Gewohnheiten</div><div style="font-size:19px;font-weight:500">${doneH}</div><div style="font-size:11px;color:var(--t3);margin-top:1px">Teilziele heute</div></div>
+      </div>
+      <div class="slbl">Frage des Tages</div>
+      <div class="deep-q" style="margin-bottom:10px"><div class="dq-eye">${dq.cat}</div><div class="dq-text">${dq.q}</div></div>
+      <div class="slbl">Supplements</div>
+      <div class="card" style="display:flex;align-items:center;gap:12px;cursor:pointer;margin-bottom:10px" onclick="go('food',document.getElementById('nb-food'));setTimeout(()=>setFoodTab('supps'),80)">
+        <div style="font-size:24px">${allS?"✅":"⚠️"}</div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:500;color:var(--t)">${allS?"Alle Supplements genommen!":"Noch offen"}</div><div style="font-size:12px;color:var(--t3)">${SUPPS.filter(s=>S.suppTaken[s.key]).length}/${SUPPS.length} abgehakt</div></div>
+        <div style="font-size:12px;color:var(--t3)">→</div>
+      </div>
+      <div class="slbl">Lebensvisionen</div>
+      <div style="display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px">
+        ${S.lifeGoals.map(g=>`<div style="flex-shrink:0;background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);padding:10px 14px;min-width:140px;cursor:pointer" onclick="go('goals',document.getElementById('nb-goals'))">
+          <div style="font-size:10px;color:var(--t3);margin-bottom:4px">${g.cat}</div>
+          <div style="font-size:13px;font-weight:500;color:var(--t);margin-bottom:8px;line-height:1.3">${g.name.split(" ").slice(0,4).join(" ")}…</div>
+          <div style="height:3px;background:var(--bg4);border-radius:2px;overflow:hidden"><div style="height:100%;background:${g.color};width:${g.progress||0}%"></div></div>
+          <div style="font-size:10px;color:var(--t3);margin-top:3px">${g.progress||0}% Fortschritt</div>
+        </div>`).join("")}
+      </div>
+      <div class="slbl">Streaks</div>
+      <div style="display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px">
+        ${S.habitGoals.map(g=>`<div style="flex-shrink:0;background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);padding:10px 14px;text-align:center;min-width:86px"><div style="font-size:16px;margin-bottom:3px">${g.ico}</div><div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px">${g.name.split(" ").slice(0,2).join(" ")}</div><div style="font-size:18px;font-weight:500;color:var(--amber)">${g.streak||0}🔥</div></div>`).join("")}
+        <div style="flex-shrink:0;background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);padding:10px 14px;text-align:center;min-width:86px"><div style="font-size:16px;margin-bottom:3px">💊</div><div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px">Supps</div><div style="font-size:18px;font-weight:500;color:var(--amber)">${S.suppStreak||0}🔥</div></div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button onclick="quickNote()" style="flex:1;padding:10px;border:1px solid var(--bd2);border-radius:var(--r2);background:var(--green);color:#0a0a0a;font-family:var(--sans);font-size:13px;font-weight:500;cursor:pointer">+ Schnell-Notiz</button>
+        <button onclick="go('notes',document.getElementById('nb-notes'))" style="flex:1;padding:10px;border:1px solid var(--bd2);border-radius:var(--r2);background:var(--bg2);color:var(--t2);font-family:var(--sans);font-size:13px;cursor:pointer">📝 Alle Notizen (${(S.notes||[]).length})</button>
+      </div>
+    </div>`;
+}
+function totalDay(di){let r={kcal:0,prot:0,carb:0,fat:0,fiber:0,vitC:0,vitD:0,vitB12:0,fe:0,ca:0,mg:0,zn:0};ND[di].meals.forEach(m=>{const src=S.foodAlt[`${di}-${m.type}`]?m.alt:m.main;for(const k in r)r[k]+=(src[k]||0);});for(const k in r)r[k]=Math.round(r[k]*10)/10;return r;}
+function renderFood(){
+  document.getElementById("s-food").innerHTML=`
+    <div class="ph"><div class="ph-eye">Woche 9.–15. Juni</div><div class="ph-title">Dein <em>Ernährungs-</em><br>plan</div></div>
+    <div class="day-strip" id="fStrip"></div>
+    <div class="tab-row" style="padding-top:12px">
+      <button class="tab-btn${S.foodTab==="meals"?" on":""}" onclick="setFoodTab('meals')">🍽 Mahlzeiten</button>
+      <button class="tab-btn${S.foodTab==="snacks"?" on":""}" onclick="setFoodTab('snacks')">🍎 Snacks</button>
+      <button class="tab-btn${S.foodTab==="shop"?" on":""}" onclick="setFoodTab('shop')">🛒 Einkauf</button>
+      <button class="tab-btn${S.foodTab==="supps"?" on":""}" onclick="setFoodTab('supps')">💊 Supps</button>
+    </div>
+    <div id="ft-meals" style="display:${S.foodTab==="meals"?"block":"none"}"></div>
+    <div id="ft-snacks" style="display:${S.foodTab==="snacks"?"block":"none"}"></div>
+    <div id="ft-shop" style="display:${S.foodTab==="shop"?"block":"none"}"></div>
+    <div id="ft-supps" style="display:${S.foodTab==="supps"?"block":"none"}"></div>`;
+  renderFoodStrip();renderMealsTab();renderSnacksTab();renderShopTab();renderSuppsTab();
+}
+function renderFoodStrip(){document.getElementById("fStrip").innerHTML=ND.map((d,i)=>`<button class="dchip${i===S.foodDay?" on":""}" onclick="setFoodDay(${i})">${d.short}</button>`).join("");}
+function setFoodDay(i){S.foodDay=i;save();renderFoodStrip();renderMealsTab();renderShopTab();}
+function setFoodTab(t){S.foodTab=t;save();document.querySelectorAll(".tab-btn").forEach((b,i)=>b.classList.toggle("on",["meals","snacks","shop","supps"][i]===t));["meals","snacks","shop","supps"].forEach(k=>{const el=document.getElementById("ft-"+k);if(el)el.style.display=k===t?"block":"none";});}
+function renderMealsTab(){
+  const t=totalDay(S.foodDay);const d=ND[S.foodDay];
+  document.getElementById("ft-meals").innerHTML=`<div class="sp">
+    <div class="card">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:10px">
+        <div style="text-align:center"><div style="font-size:18px;font-weight:500;color:var(--green)">${t.kcal}</div><div style="font-size:9px;color:var(--t3);text-transform:uppercase;margin-top:1px">kcal</div></div>
+        <div style="text-align:center"><div style="font-size:18px;font-weight:500;color:var(--teal)">${t.prot}g</div><div style="font-size:9px;color:var(--t3);text-transform:uppercase;margin-top:1px">Protein</div></div>
+        <div style="text-align:center"><div style="font-size:18px;font-weight:500;color:var(--amber)">${t.fiber}g</div><div style="font-size:9px;color:var(--t3);text-transform:uppercase;margin-top:1px">Ballaststoffe</div></div>
+      </div>
+      <div class="bar-row"><span class="bl">Protein</span><div class="bt"><div class="bf" style="background:var(--teal);width:${Math.min(100,Math.round(t.prot/80*100))}%"></div></div><span class="bv">${t.prot}g</span></div>
+      <div class="bar-row"><span class="bl">Carbs</span><div class="bt"><div class="bf" style="background:var(--amber);width:${Math.min(100,Math.round(t.carb/120*100))}%"></div></div><span class="bv">${t.carb}g</span></div>
+      <div class="bar-row"><span class="bl">Fett</span><div class="bt"><div class="bf" style="background:var(--red);width:${Math.min(100,Math.round(t.fat/60*100))}%"></div></div><span class="bv">${t.fat}g</span></div>
+    </div>
+    ${d.meals.map((m,mi)=>mealCardHTML(m,mi)).join("")}
+  </div>`;
+}
+function mealCardHTML(m,mi){
+  const isAlt=S.foodAlt[`${S.foodDay}-${m.type}`];const src=isAlt?m.alt:m.main;
+  const icoMap={fr:"ico-fr",ma:"ico-ma",ab:"ico-ab"};const id=`mc-${S.foodDay}-${mi}`;
+  return`<div class="mc" id="${id}">
+    <div class="mc-top" onclick="toggleMC('${id}',${mi})">
+      <div class="mc-ico ${icoMap[m.type]||"ico-fr"}">${m.ico}</div>
+      <div class="mc-meta">
+        <div class="mc-type">${m.lbl}${m.prep?` · <span style="color:var(--teal)">${m.prep}</span>`:""}</div>
+        <div class="mc-name">${src.name}</div>
+        <div class="mc-pills"><span class="pill pill-g">${src.prot}g Prot</span><span class="pill pill-a">${src.kcal} kcal</span><span class="pill pill-r">${src.fat}g Fett</span></div>
+      </div>
+      <div class="mc-arr"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+    </div>
+    <div class="mc-body" id="mb-${S.foodDay}-${mi}">
+      <div class="alt-tog"><button class="at-btn${!isAlt?" on":""}" onclick="setAlt(${S.foodDay},'${m.type}',false,${mi})">Standard</button><button class="at-btn${isAlt?" on":""}" onclick="setAlt(${S.foodDay},'${m.type}',true,${mi})">Alternative</button></div>
+      <div class="slbl">Zutaten</div><ul class="ing-list">${src.ing.map(i=>`<li>${i}</li>`).join("")}</ul>
+      <div class="slbl">Zubereitung</div><ol class="steps-ol">${src.steps.map((s,si)=>`<li><span class="sn">${si+1}</span><span>${s}</span></li>`).join("")}</ol>
+      <div class="divider"></div><div class="slbl">Nährwerte</div>
+      <div class="nwg">${[["Kalorien",src.kcal,"kcal"],["Protein",src.prot,"g"],["Carbs",src.carb,"g"],["Fett",src.fat,"g"],["Ballaststoffe",src.fiber,"g"],["Vit. C",src.vitC,"mg"],["Vit. D",src.vitD,"µg"],["Vit. B12",src.vitB12,"µg"],["Eisen",src.fe,"mg"],["Calcium",src.ca,"mg"],["Magnesium",src.mg,"mg"],["Zink",src.zn,"mg"]].map(([l,v,u])=>`<div class="nwc"><div class="nwl">${l}</div><div class="nwv">${v}<span> ${u}</span></div></div>`).join("")}</div>
+    </div>
+  </div>`;
+}
+function toggleMC(id,mi){const c=document.getElementById(id);const b=document.getElementById(`mb-${S.foodDay}-${mi}`);const open=c.classList.toggle("open");if(b)b.style.display=open?"block":"none";}
+function setAlt(di,type,isAlt,mi){S.foodAlt[`${di}-${type}`]=isAlt;save();renderMealsTab();setTimeout(()=>{const c=document.getElementById(`mc-${di}-${mi}`);const b=document.getElementById(`mb-${di}-${mi}`);if(c&&b){c.classList.add("open");b.style.display="block";}},10);}
+function renderSnacksTab(){
+  const dayIdx=new Date().getDay()%7;const snacks=SNACK_DAYS[dayIdx];
+  document.getElementById("ft-snacks").innerHTML=`<div class="sp">
+    <div style="background:var(--bg3);border-radius:var(--r2);padding:8px 12px;margin-bottom:12px;font-size:12px;color:var(--t3)">🔄 Täglich neue Snack-Vorschläge — heute: <strong style="color:var(--t2)">${["So","Mo","Di","Mi","Do","Fr","Sa"][new Date().getDay()]}</strong></div>
+    ${snacks.map(s=>`<div style="background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);padding:12px 14px;display:flex;align-items:flex-start;gap:10px;margin-bottom:8px"><div style="font-size:22px;width:30px;text-align:center;flex-shrink:0;margin-top:1px">${s.ico}</div><div style="flex:1"><div style="font-size:13px;font-weight:500;color:var(--t);margin-bottom:3px">${s.n}</div><div style="font-size:12px;color:var(--t2);line-height:1.45;margin-bottom:5px">${s.d}</div><div style="display:flex;gap:4px;flex-wrap:wrap">${s.ps.map(p=>`<span class="pill pill-g" style="font-size:9px">${p}</span>`).join("")}</div></div></div>`).join("")}
+    <div style="background:var(--bg3);border-radius:var(--r2);padding:8px 12px;font-size:12px;color:var(--t3);line-height:1.5">💡 Morgen gibt es neue Vorschläge. Schau täglich rein!</div>
+  </div>`;
+}
+function getChosenIngredients(){
+  // Build a set of ingredients from chosen meal variants for current week
+  const allIng=new Set();
+  ND.forEach((day,di)=>{
+    day.meals.forEach(m=>{
+      const src=S.foodAlt[`${di}-${m.type}`]?m.alt:m.main;
+      src.ing.forEach(i=>allIng.add(i.toLowerCase().split("(")[0].trim()));
+    });
+  });
+  return allIng;
+}
+function renderShopTab(){
+  const autoIdx=ND[S.foodDay].shopDay;
+  if(S.shopViewDay===undefined)S.shopViewDay=autoIdx;
+  const sd=SHOP[S.shopViewDay];
+  // Build chosen variants summary
+  const variantNote=ND.map((day,di)=>{
+    const alts=day.meals.filter(m=>S.foodAlt[`${di}-${m.type}`]);
+    return alts.length?`${day.short}: ${alts.map(m=>m.alt.name.split(" ").slice(0,2).join(" ")).join(", ")} (Alt.)`:"";
+  }).filter(Boolean).join(" · ");
+  const autoLabel=autoIdx===0?"Mo-Einkauf (Di–Fr)":"Do/Fr-Einkauf (Sa–So)";
+  document.getElementById("ft-shop").innerHTML=`<div class="sp">
+    <div style="display:flex;gap:6px;margin-bottom:10px">
+      ${SHOP.map((s,i)=>`<button onclick="setShopView(${i})" style="flex:1;padding:8px 4px;border:1px solid ${S.shopViewDay===i?"var(--bd3)":"var(--bd2)"};border-radius:var(--r2);background:${S.shopViewDay===i?"var(--bg4)":"var(--bg2)"};color:${S.shopViewDay===i?"var(--t)":"var(--t2)"};font-family:var(--sans);font-size:11px;font-weight:500;cursor:pointer;text-align:center">${s.day}${i===autoIdx?` <span style="font-size:9px;color:var(--teal)">●</span>`:""}</button>`).join("")}
+    </div>
+    <div style="background:var(--bg3);border-radius:var(--r2);padding:7px 12px;margin-bottom:6px;font-size:11px;color:var(--t3)">
+      🔗 Ausgewählter Tag: <strong style="color:var(--t2)">${ND[S.foodDay].full}</strong> → <span style="color:var(--teal)">${autoLabel}</span>
+    </div>
+    ${variantNote?`<div style="background:rgba(200,240,122,.08);border:1px solid rgba(200,240,122,.2);border-radius:var(--r2);padding:7px 12px;margin-bottom:10px;font-size:11px;color:var(--t2)">✏️ Gewählte Alternativen: ${variantNote}</div>`:""}
+    <div style="background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);padding:12px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div><div style="font-size:11px;color:var(--t3);margin-bottom:2px">${sd.sub}</div><div style="font-size:22px;font-weight:500;color:var(--teal)">${sd.budget}</div></div>
+      <div style="text-align:right;font-size:12px;color:var(--t3)">Woche gesamt<br>~55–75 €<br><span style="color:var(--teal)">✓ Im Budget</span></div>
+    </div>
+    ${sd.cats.map((cat,ci)=>`<div style="font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);margin:12px 0 7px">${cat.i} ${cat.t}</div>${cat.items.map((item,ii)=>{const key=`${S.shopViewDay}-${ci}-${ii}`;const done=S.shopChecked[key]||false;return`<div class="shop-item${done?" done":""}" onclick="toggleShop('${key}')"><div class="si-chk"><svg viewBox="0 0 10 10"><polyline points="1.5 5 4 7.5 8.5 2.5"/></svg></div><span class="si-name">${item.n}</span><span class="si-p">${item.p}</span></div>`;}).join("")}`).join("")}
+    <button class="btn" style="margin-top:10px" onclick="clearShop(${S.shopViewDay})">Liste zurücksetzen</button>
+  </div>`;
+}
+function setShopView(i){S.shopViewDay=i;save();renderShopTab();}
+function toggleShop(key){S.shopChecked[key]=!S.shopChecked[key];save();renderShopTab();}
+function clearShop(di){Object.keys(S.shopChecked).forEach(k=>{if(k.startsWith(`${di}-`))delete S.shopChecked[k];});save();renderShopTab();}
+function renderSuppsTab(){
+  const allDone=SUPPS.every(s=>S.suppTaken[s.key]);
+  document.getElementById("ft-supps").innerHTML=`<div class="sp">
+    <div style="background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);padding:11px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div><div style="font-size:11px;color:var(--t3);margin-bottom:2px">Einnahme-Streak</div><div style="font-size:20px;font-weight:500;color:var(--amber)">${S.suppStreak||0} 🔥</div></div>
+      <div style="font-size:13px;color:${allDone?"var(--teal)":"var(--t2)"}">${allDone?"✅ Alle heute!":SUPPS.filter(s=>S.suppTaken[s.key]).length+"/"+SUPPS.length+" erledigt"}</div>
+    </div>
+  ${SUPPS.map(s=>`<div class="supp-card${S.suppTaken[s.key]?" taken":""}" onclick="toggleSuppAndCheck('${s.key}')"><div class="supp-ico">${s.ico}</div><div class="supp-info"><div class="supp-name">${s.name}</div><div class="supp-desc">${s.desc}</div><div class="supp-time">⏰ ${s.time}</div></div><div class="supp-chk"><svg viewBox="0 0 14 14"><polyline points="2 7 5.5 10.5 12 3"/></svg></div></div>`).join("")}
+    <button class="btn" style="margin-top:4px" onclick="resetSupps()">Zurücksetzen (neuer Tag)</button>
+  </div>`;
+}
+function toggleSupp(key){S.suppTaken[key]=!S.suppTaken[key];save();renderSuppsTab();}
+function toggleSuppAndCheck(key){toggleSupp(key);if(SUPPS.every(s=>S.suppTaken[s.key]))checkSuppStreak();renderSuppsTab();}
+function checkSuppStreak(){
+  // Only increment once per day when all taken
+  const today=new Date().toDateString();
+  if(SUPPS.every(s=>S.suppTaken[s.key])&&S.suppLastStreakDate!==today){
+    S.suppStreak=(S.suppStreak||0)+1;S.suppLastStreakDate=today;save();
+  }
+}
+function resetSupps(){S.suppTaken={};save();renderSuppsTab();}
+function renderTrain(){
+  const split=TRAINING[S.trainSplit];
+  const totalSets=split.exercises.reduce((a,e)=>a+e.sets,0);
+  const doneSets=split.exercises.reduce((a,e,ei)=>a+Array.from({length:e.sets},(_,si)=>S.trainSets[`${S.trainSplit}-${ei}-${si}`]?.done?1:0).reduce((x,y)=>x+y,0),0);
+  const doneExs=split.exercises.filter((_,i)=>S.trainDoneEx[`${S.trainSplit}-${i}`]).length;
+  const pct=totalSets?Math.round(doneSets/totalSets*100):0;
+  document.getElementById("s-train").innerHTML=`
+    <div class="ph"><div class="ph-eye">Push · Pull · Legs</div><div class="ph-title">Dein <em>Training</em></div></div>
+    <div class="tab-row" style="padding-bottom:8px">
+      ${["legs","push","pull"].map(k=>`<button class="tab-btn${S.trainSplit===k?" on":""}" onclick="setSplit('${k}')" style="flex-direction:column;gap:1px;padding:7px 4px">${TRAINING[k].name}<br><span style="font-size:9px;color:var(--t3);font-weight:400">${TRAINING[k].day}</span></button>`).join("")}
+    </div>
+    <div class="sp" style="padding-bottom:8px">
+      <div class="card" style="margin-bottom:0">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:10px">
+          <div style="text-align:center"><div style="font-size:18px;font-weight:500;color:var(--green)">${split.exercises.length}</div><div style="font-size:9px;color:var(--t3);text-transform:uppercase">Übungen</div></div>
+          <div style="text-align:center"><div style="font-size:18px;font-weight:500;color:var(--teal)">${totalSets}</div><div style="font-size:9px;color:var(--t3);text-transform:uppercase">Sätze</div></div>
+          <div style="text-align:center"><div style="font-size:18px;font-weight:500;color:var(--amber)">${doneExs}/${split.exercises.length}</div><div style="font-size:9px;color:var(--t3);text-transform:uppercase">Erledigt</div></div>
+        </div>
+        <div style="height:4px;background:var(--bg4);border-radius:2px;overflow:hidden;margin-bottom:4px"><div style="height:100%;background:var(--green);width:${pct}%;transition:width .3s"></div></div>
+        <div style="font-size:11px;color:var(--t3)">${doneSets}/${totalSets} Sätze · ${pct}%</div>
+      </div>
+    </div>
+    <div class="sp">${split.exercises.map((ex,i)=>exerciseHTML(ex,i)).join("")}<button class="btn btn-p" onclick="finishWorkout()">Workout abschließen 💪</button></div>`;
+}
+function exerciseHTML(ex,i){
+  const key=`${S.trainSplit}-${i}`;const done=S.trainDoneEx[key];
+  return`<div class="ex-card" id="ex-${key}">
+    <div class="ex-head" onclick="toggleEx('${key}')">
+      <div class="ex-num${done?" done-ex":""}">${done?"✓":i+1}</div>
+      <div class="ex-info"><div class="ex-name">${ex.name}</div><div class="ex-sets">${ex.sets} Sätze · ${ex.reps} Wdh</div></div>
+      <div class="ex-arr">▾</div>
+    </div>
+    <div class="ex-body" id="exb-${key}" style="display:none">
+      <div class="set-grid" style="margin-bottom:4px"><div class="set-lbl">Satz</div><div class="set-lbl">kg</div><div class="set-lbl">Wdh</div><div></div></div>
+      ${Array.from({length:ex.sets},(_,si)=>{const sk=`${key}-${si}`;const d=S.trainSets[sk]||{weight:"",reps:"",done:false};return`<div class="set-grid"><div style="width:28px;height:28px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--t3)">${si+1}</div><input class="set-in" type="number" inputmode="decimal" placeholder="kg" value="${d.weight}" onchange="saveSet('${sk}','weight',this.value)"><input class="set-in" type="number" inputmode="numeric" placeholder="${ex.reps.split("–")[0]}" value="${d.reps}" onchange="saveSet('${sk}','reps',this.value)"><button class="set-chk${d.done?" on":""}" onclick="toggleSetDone('${sk}','${key}',${i},${ex.sets})"><svg viewBox="0 0 14 14"><polyline points="2 7 5.5 10.5 12 3"/></svg></button></div>`;}).join("")}
+      <div class="ex-tip">${ex.tip}</div>
+    </div>
+  </div>`;
+}
+function toggleEx(key){const c=document.getElementById("ex-"+key);const b=document.getElementById("exb-"+key);const open=c.classList.toggle("open");if(b)b.style.display=open?"block":"none";}
+function setSplit(k){S.trainSplit=k;save();renderTrain();}
+function saveSet(sk,field,val){if(!S.trainSets[sk])S.trainSets[sk]={weight:"",reps:"",done:false};S.trainSets[sk][field]=val;save();}
+function toggleSetDone(sk,key,exIdx,exSets){if(!S.trainSets[sk])S.trainSets[sk]={weight:"",reps:"",done:false};S.trainSets[sk].done=!S.trainSets[sk].done;const allDone=Array.from({length:exSets},(_,si)=>S.trainSets[`${key}-${si}`]?.done).every(Boolean);S.trainDoneEx[key]=allDone;save();renderTrain();setTimeout(()=>{const c=document.getElementById("ex-"+key);const b=document.getElementById("exb-"+key);if(c&&b&&!allDone){c.classList.add("open");b.style.display="block";}},10);}
+function finishWorkout(){const split=TRAINING[S.trainSplit];const done=split.exercises.filter((_,i)=>S.trainDoneEx[`${S.trainSplit}-${i}`]).length;const subMap={legs:"g1s1",push:"g1s2",pull:"g1s3"};if(subMap[S.trainSplit])S.habitSubsDone[subMap[S.trainSplit]]=true;save();alert(`💪 Workout abgeschlossen!\n${done}/${split.exercises.length} Übungen.\nGut gemacht!`);}
+function renderJournal(){
+  const dq=DAILY_QS[new Date().getDate()%DAILY_QS.length];
+  document.getElementById("s-journal").innerHTML=`
+    <div class="ph"><div class="ph-eye">${new Date().toLocaleDateString("de",{weekday:"long",day:"numeric",month:"long"})}</div><div class="ph-title">Dein <em>Journal</em></div></div>
+    <div class="tab-row"><button class="tab-btn${S.journalMode==="morning"?" on":""}" onclick="setJMode('morning')">🌅 Morgen</button><button class="tab-btn${S.journalMode==="evening"?" on":""}" onclick="setJMode('evening')">🌙 Abend</button><button class="tab-btn${S.journalMode==="history"?" on":""}" onclick="setJMode('history')">📚 Verlauf</button></div>
+    <div id="j-content"></div>`;
+  renderJContent();
+}
+function setJMode(m){S.journalMode=m;renderJContent();}
+function renderJContent(){
+  const el=document.getElementById("j-content");
+  const dq=DAILY_QS[new Date().getDate()%DAILY_QS.length];
+  if(S.journalMode==="morning"){
+    const todos=S.morning.todos||[];
+    el.innerHTML=`<div class="sp">
+      <div class="slbl" style="margin-top:0">Intention für heute</div>
+      <textarea rows="2" placeholder="Was ist meine Absicht für heute?" onchange="S.morning.intention=this.value;save()">${S.morning.intention||""}</textarea>
+      <div class="slbl">To-Dos</div>
+      <div class="card" id="todo-list">
+        ${todos.map((t,i)=>`<div class="chk-row${t.done?" done":""}" onclick="toggleTodo(${i})"><div class="chk-box${t.done?" on":""}"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></div><span class="chk-lbl">${t.text}</span></div>`).join("")}
+        ${!todos.length?`<div style="font-size:13px;color:var(--t3);text-align:center;padding:6px 0">Noch leer</div>`:""}
+      </div>
+      <div style="display:flex;gap:8px;margin-top:6px"><input type="text" id="todo-in" placeholder="Neues To-Do..." style="flex:1"><button class="btn btn-sm btn-p" onclick="addTodo()">+</button></div>
+      <div class="slbl">Frage des Tages</div>
+      <div class="deep-q"><div class="dq-eye">${dq.cat}</div><div class="dq-text">${dq.q}</div></div>
+      <textarea rows="3" placeholder="Deine Antwort..." onchange="S.morning.deepAnswer=this.value;save()" style="margin-top:6px">${S.morning.deepAnswer||""}</textarea>
+      <button class="btn btn-p" style="margin-top:10px" onclick="saveMorning()">Morgenroutine speichern ✓</button>
+    </div>`;
+  } else if(S.journalMode==="evening"){
+    el.innerHTML=`<div class="sp">
+      <div class="slbl" style="margin-top:0">Stimmung heute</div>
+      <div class="mood-row">${[["😫","Schlecht"],["😕","Ok"],["😐","Neutral"],["😊","Gut"],["😄","Super"]].map(([e,l])=>`<button class="mood-btn${S.evening.mood===e?" on":""}" onclick="setMood('${e}')">${e}</button>`).join("")}</div>
+      <div class="slbl">Schlaf letzte Nacht</div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+        <input type="range" min="4" max="12" step="0.5" value="${S.evening.sleep||7}" style="flex:1" oninput="S.evening.sleep=parseFloat(this.value);save();document.getElementById('sv').textContent=this.value+'h'">
+        <div id="sv" style="font-size:20px;font-weight:500;color:var(--amber);width:46px;text-align:center;flex-shrink:0">${S.evening.sleep||7}h</div>
+      </div>
+      <div class="slbl">To-Dos – erledigt?</div>
+      <div class="card">${(S.morning.todos||[]).map(t=>`<div class="chk-row${t.done?" done":""}"><div class="chk-box${t.done?" on":""}"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></div><span class="chk-lbl">${t.text}</span></div>`).join("")}${!(S.morning.todos||[]).length?`<div style="font-size:13px;color:var(--t3);text-align:center;padding:6px 0">Keine To-Dos</div>`:""}</div>
+      <div class="slbl">Was lief heute gut?</div>
+      <textarea rows="2" placeholder="Highlights..." onchange="S.evening.good=this.value;save()">${S.evening.good||""}</textarea>
+      <div class="slbl">Was würde ich morgen anders machen?</div>
+      <textarea rows="2" placeholder="Lernmomente..." onchange="S.evening.improve=this.value;save()">${S.evening.improve||""}</textarea>
+      <div class="slbl">Freier Gedankenraum</div>
+      <textarea rows="4" placeholder="Was fliegt noch durch den Kopf? Einfach rausschreiben..." onchange="S.evening.thoughts=this.value;save()">${S.evening.thoughts||""}</textarea>
+      <div class="slbl">Frage des Tages</div>
+      <div class="deep-q"><div class="dq-eye">${dq.cat}</div><div class="dq-text">${dq.q}</div></div>
+      <textarea rows="3" placeholder="Abendantwort..." onchange="S.evening.deepAnswer=this.value;save()" style="margin-top:6px">${S.evening.deepAnswer||""}</textarea>
+      <button class="btn btn-p" style="margin-top:10px" onclick="saveEvening()">Abendroutine speichern 🌙</button>
+    </div>`;
+  } else {
+    const entries=[...S.entries].reverse();
+    el.innerHTML=`<div class="sp">
+      ${!entries.length?`<div style="text-align:center;padding:40px 20px;color:var(--t3);font-size:14px;line-height:1.7">Noch keine Einträge.<br>Starte heute mit der Morgenroutine.</div>`:""}
+      ${entries.map((e,i)=>`<div class="je" id="je-${i}" onclick="toggleJE('je-${i}')">
+        <div style="padding:12px 14px;display:flex;align-items:center;gap:10px"><div style="font-size:20px">${e.mood||"📓"}</div><div style="flex:1;margin:0 10px"><div style="font-size:13px;font-weight:500;color:var(--t)">${e.date}</div><div style="font-size:11px;color:var(--t3)">Schlaf ${e.sleep}h · ${e.todos} To-Dos</div></div><div style="font-size:11px;color:var(--t3)">▾</div></div>
+        <div class="je-body">${e.intention?`<div class="je-section">Intention</div><div class="je-text">${e.intention}</div>`:""}${e.good?`<div class="je-section">Was lief gut</div><div class="je-text">${e.good}</div>`:""}${e.improve?`<div class="je-section">Nächstes Mal</div><div class="je-text">${e.improve}</div>`:""}${e.thoughts?`<div class="je-section">Gedanken</div><div class="je-text">${e.thoughts}</div>`:""}${e.deepAnswer?`<div class="je-section">Tagesantwort</div><div class="je-text">${e.deepAnswer}</div>`:""}</div>
+      </div>`).join("")}
+    </div>`;
+  }
+}
+function setMood(e){S.evening.mood=e;save();renderJContent();}
+function addTodo(){const inp=document.getElementById("todo-in");const txt=inp.value.trim();if(!txt)return;if(!S.morning.todos)S.morning.todos=[];S.morning.todos.push({text:txt,done:false});inp.value="";save();renderJContent();}
+function toggleTodo(i){S.morning.todos[i].done=!S.morning.todos[i].done;save();renderJContent();}
+function saveMorning(){S.habitSubsDone["g3s1"]=true;save();alert("✅ Morgenroutine gespeichert!\nHab einen fokussierten Tag!");}
+function saveEvening(){
+  const e={date:new Date().toLocaleDateString("de",{weekday:"short",day:"numeric",month:"long"}),mood:S.evening.mood,sleep:S.evening.sleep,todos:(S.morning.todos||[]).length,intention:S.morning.intention,good:S.evening.good,improve:S.evening.improve,thoughts:S.evening.thoughts,deepAnswer:S.evening.deepAnswer||S.morning.deepAnswer};
+  if(!S.entries)S.entries=[];S.entries.push(e);S.habitSubsDone["g3s2"]=true;
+  const g=S.habitGoals.find(x=>x.id==="g3");if(g&&g.subs.every(s=>S.habitSubsDone[s.id]))g.streak=(g.streak||0)+1;
+  S.morning={todos:[],intention:"",deepAnswer:""};S.evening={mood:"",sleep:7,good:"",improve:"",thoughts:"",deepAnswer:""};
+  save();alert("🌙 Abendroutine gespeichert!\nGute Nacht!");S.journalMode="history";renderJContent();
+}
+function toggleJE(id){const el=document.getElementById(id);el.classList.toggle("open");const b=el.querySelector(".je-body");if(b)b.style.display=el.classList.contains("open")?"block":"none";}
+function renderGoals(){
+  document.getElementById("s-goals").innerHTML=`
+    <div class="ph"><div class="ph-eye">Dein Leben</div><div class="ph-title">Vision & <em>Ziele</em></div></div>
+    <div class="tab-row">
+      <button class="tab-btn${S.goalsTab==="vision"?" on":""}" onclick="setGoalsTab('vision')">🌟 Vision</button>
+      <button class="tab-btn${S.goalsTab==="books"?" on":""}" onclick="setGoalsTab('books')">📚 Bücher</button>
+      <button class="tab-btn${S.goalsTab==="habits"?" on":""}" onclick="setGoalsTab('habits')">✅ Habits</button>
+      <button class="tab-btn${S.goalsTab==="weekly"?" on":""}" onclick="setGoalsTab('weekly')">📊 Woche</button>
+      <button class="tab-btn${S.goalsTab==="ai"?" on":""}" onclick="setGoalsTab('ai')">🤖 KI</button>
+    </div>
+    <div id="gt-vision" style="display:${S.goalsTab==="vision"?"block":"none"}"></div>
+    <div id="gt-books" style="display:${S.goalsTab==="books"?"block":"none"}"></div>
+    <div id="gt-habits" style="display:${S.goalsTab==="habits"?"block":"none"}"></div>
+    <div id="gt-weekly" style="display:${S.goalsTab==="weekly"?"block":"none"}"></div>
+    <div id="gt-ai" style="display:${S.goalsTab==="ai"?"block":"none"}"></div>`;
+  renderVisionTab();renderBooksTab();renderHabitsTab();renderWeeklySummary();renderAITab();
+}
+function setGoalsTab(t){S.goalsTab=t;save();document.querySelectorAll(".tab-btn").forEach((b,i)=>b.classList.toggle("on",["vision","books","habits","weekly","ai"][i]===t));["vision","books","habits","weekly","ai"].forEach(k=>{const el=document.getElementById("gt-"+k);if(el)el.style.display=k===t?"block":"none";});if(t==="weekly")renderWeeklySummary();}
+function renderVisionTab(){
+  document.getElementById("gt-vision").innerHTML=`<div class="sp">
+    <div style="background:var(--bg3);border-radius:var(--r2);padding:10px 12px;margin-bottom:14px;font-size:13px;color:var(--t2);line-height:1.6;border-left:3px solid var(--purple)">Diese Ziele sind dein Kompass. Wenn du dich verloren oder abgelenkt fühlst – komm hierher zurück.</div>
+    ${S.lifeGoals.map((g,gi)=>lifeGoalHTML(g)).join("")}
+    <button class="btn" style="margin-top:4px" onclick="addLifeGoal()">+ Neue Vision hinzufügen</button>
+  </div>`;
+}
+function lifeGoalHTML(g){
+  const stepsDone=g.steps.filter(s=>S.lifeStepsDone[s.id]).length;
+  const pct=g.steps.length?Math.round(stepsDone/g.steps.length*100):g.progress||0;
+  return`<div class="life-goal" id="lg-${g.id}">
+    <div class="lg-banner" onclick="toggleLG('${g.id}')">
+      <div class="lg-cat" style="color:${g.color}">${g.cat}</div>
+      <div class="lg-name">${g.name}</div>
+      <div class="lg-desc">${g.desc}</div>
+      <div class="lg-prog-row"><div class="lg-ptrack"><div class="lg-pbar" style="background:${g.color};width:${pct}%"></div></div><div class="lg-pct">${pct}%</div></div>
+    </div>
+    <div class="lg-body" id="lgb-${g.id}" style="display:none">
+      <div class="slbl" style="margin-top:0">Nächste Schritte</div>
+      ${g.steps.map(s=>`<div class="next-step${S.lifeStepsDone[s.id]?" done-step":""}" onclick="toggleLifeStep('${s.id}','${g.id}')"><div class="ns-chk"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></div><span class="ns-text">${s.text}</span></div>`).join("")}
+      <div style="display:flex;gap:6px;margin-top:12px;flex-wrap:wrap">
+        <button class="btn btn-purple btn-sm" onclick="openGoalChat('${g.id}')">🤖 Mit KI besprechen</button>
+        <button class="btn btn-sm" onclick="addStepToGoal('${g.id}')">+ Schritt</button>
+        <button class="btn btn-del btn-sm" onclick="deleteLifeGoal('${g.id}')">Löschen</button>
+      </div>
+    </div>
+  </div>`;
+}
+function toggleLG(id){const c=document.getElementById("lg-"+id);const b=document.getElementById("lgb-"+id);const open=c.classList.toggle("open");if(b)b.style.display=open?"block":"none";}
+function toggleLifeStep(sid,gid){
+  S.lifeStepsDone[sid]=!S.lifeStepsDone[sid];
+  const g=S.lifeGoals.find(x=>x.id===gid);
+  if(g){const done=g.steps.filter(s=>S.lifeStepsDone[s.id]).length;g.progress=g.steps.length?Math.round(done/g.steps.length*100):g.progress;}
+  save();renderVisionTab();setTimeout(()=>{const c=document.getElementById("lg-"+gid);const b=document.getElementById("lgb-"+gid);if(c&&b){c.classList.add("open");b.style.display="block";}},10);
+}
+function addLifeGoal(){const name=prompt("Name der Vision:");if(!name)return;const desc=prompt("Kurzbeschreibung:")||"";const id="lg"+Date.now();S.lifeGoals.push({id,color:"var(--blue)",cat:"✨ Neue Vision",name,desc,progress:0,steps:[]});save();renderVisionTab();}
+function addStepToGoal(gid){const txt=prompt("Nächster Schritt:");if(!txt)return;const g=S.lifeGoals.find(x=>x.id===gid);if(!g)return;g.steps.push({id:"s"+Date.now(),text:txt,done:false});save();renderVisionTab();setTimeout(()=>{const c=document.getElementById("lg-"+gid);const b=document.getElementById("lgb-"+gid);if(c&&b){c.classList.add("open");b.style.display="block";}},10);}
+function deleteLifeGoal(gid){if(!confirm("Vision wirklich löschen?"))return;S.lifeGoals=S.lifeGoals.filter(g=>g.id!==gid);save();renderVisionTab();}
+function renderBooksTab(){
+  document.getElementById("gt-books").innerHTML=`<div class="sp">
+    <div style="background:var(--bg3);border-radius:var(--r2);padding:10px 12px;margin-bottom:12px;font-size:13px;color:var(--t2);line-height:1.5">📖 Monatlich ein Buch – analysieren, interpretieren, darüber schreiben. Dein persönliches Literatur-Archiv.</div>
+    <button class="btn btn-p" style="margin-bottom:12px" onclick="addBook()">+ Neues Buch hinzufügen</button>
+    ${!S.books.length?`<div style="text-align:center;padding:30px 20px;color:var(--t3);font-size:14px">Noch kein Buch eingetragen.</div>`:""}
+    ${S.books.map((b,bi)=>bookCardHTML(b,bi)).join("")}
+  </div>`;
+}
+function bookCardHTML(b,bi){
+  const stars="⭐".repeat(b.rating||0)+"☆".repeat(5-(b.rating||0));
+  return`<div class="book-card" id="bc-${bi}">
+    <div class="bc-head" onclick="toggleBC(${bi})">
+      <div class="bc-cover">${b.emoji||"📖"}</div>
+      <div class="bc-meta">
+        <div class="bc-title">${b.title}</div>
+        <div class="bc-author">${b.author||"—"}</div>
+        <div style="font-size:13px;margin-bottom:5px">${stars}</div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap">${b.finished?`<span class="pill pill-g">Gelesen ✓</span>`:`<span class="pill pill-a">Am Lesen</span>`}${(b.summary||b.analysis)?`<span class="pill pill-p">Analysiert</span>`:""}</div>
+      </div>
+    </div>
+    <div class="bc-body" id="bcb-${bi}" style="display:none">
+      <div class="slbl">Bewertung</div>
+      <div style="display:flex;gap:6px;margin-bottom:10px">${[1,2,3,4,5].map(n=>`<button onclick="rateBook(${bi},${n})" style="font-size:20px;border:none;background:none;cursor:pointer;opacity:${(b.rating||0)>=n?1:.3}">${n<=3?"⭐":"⭐"}</button>`).join("")}</div>
+      ${BOOK_TEMPLATE.map(f=>`<div class="slbl">${f.label}</div><textarea rows="3" placeholder="${f.ph}" onchange="saveBookField(${bi},'${f.key}',this.value)">${b[f.key]||""}</textarea>`).join("")}
+      <div style="display:flex;gap:6px;margin-top:12px;flex-wrap:wrap">
+        <button class="btn btn-purple btn-sm" onclick="analyzeBook(${bi})">🤖 KI-Analyse</button>
+        <button class="btn btn-sm" onclick="toggleFinished(${bi})">${b.finished?"↩ Noch nicht fertig":"✓ Als gelesen markieren"}</button>
+        <button class="btn btn-del btn-sm" onclick="deleteBook(${bi})">Löschen</button>
+      </div>
+    </div>
+  </div>`;
+}
+function toggleBC(bi){const c=document.getElementById("bc-"+bi);const b=document.getElementById("bcb-"+bi);const open=c.classList.toggle("open");if(b)b.style.display=open?"block":"none";}
+function rateBook(bi,n){S.books[bi].rating=n;save();renderBooksTab();setTimeout(()=>{const c=document.getElementById("bc-"+bi);const b=document.getElementById("bcb-"+bi);if(c&&b){c.classList.add("open");b.style.display="block";}},10);}
+function addBook(){const title=prompt("Buchtitel:");if(!title)return;const author=prompt("Autor:")||"";const emoji=prompt("Emoji (z.B. 📗):")||"📖";S.books.push({title,author,emoji,rating:0,finished:false,summary:"",insights:"",analysis:"",personal:"",content:""});save();renderBooksTab();}
+function saveBookField(bi,key,val){if(!S.books[bi])return;S.books[bi][key]=val;save();}
+function toggleFinished(bi){S.books[bi].finished=!S.books[bi].finished;save();renderBooksTab();}
+function deleteBook(bi){if(!confirm("Buch wirklich löschen?"))return;S.books.splice(bi,1);save();renderBooksTab();}
+function analyzeBook(bi){
+  const b=S.books[bi];
+  const prompt=`Ich lese "${b.title}" von ${b.author||"unbekanntem Autor"}. ${b.summary?"Zusammenfassung: "+b.summary:""} Ich möchte: 1) Eine tiefergehende Analyse des Buches 2) Ideen für einen YouTube/Blog-Beitrag. Was schlägst du vor?`;
+  S.goalsTab="ai";S.aiTopic="books";
+  if(!S.chatHistory["books"])S.chatHistory["books"]=[];
+  S.chatHistory["books"].push({role:"user",content:prompt});
+  save();setGoalsTab("ai");
+  setTimeout(()=>callClaude("books"),100);
+}
+function renderHabitsTab(){
+  document.getElementById("gt-habits").innerHTML=`<div class="sp">
+    ${S.habitGoals.map((g)=>habitCardHTML(g)).join("")}
+    <button class="btn" onclick="addHabit()">+ Neue Gewohnheit</button>
+  </div>`;
+}
+function habitCardHTML(g){
+  const subs=g.subs||[];const done=subs.filter(s=>S.habitSubsDone[s.id]).length;const pct=subs.length?Math.round(done/subs.length*100):0;
+  return`<div style="background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;margin-bottom:10px" id="hc-${g.id}">
+    <div style="padding:13px 14px;cursor:pointer;display:flex;align-items:flex-start;gap:10px" onclick="toggleHC('${g.id}')">
+      <div style="font-size:22px;flex-shrink:0;margin-top:2px">${g.ico}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:14px;font-weight:500;color:var(--t);margin-bottom:3px">${g.name}</div>
+        <div style="font-size:12px;color:var(--amber);margin-bottom:3px">🔥 ${g.streak||0} Tage Streak</div>
+        <div style="font-size:11px;color:var(--t3);margin-bottom:4px">${done}/${subs.length} heute</div>
+        <div style="height:3px;background:var(--bg4);border-radius:2px;overflow:hidden"><div style="height:100%;border-radius:2px;background:var(--green);width:${pct}%"></div></div>
+      </div>
+      <div style="font-size:12px;color:var(--t3)" id="hcarr-${g.id}">▾</div>
+    </div>
+    <div id="hcb-${g.id}" style="display:none;padding:0 14px 14px;border-top:1px solid var(--bd)">
+      ${subs.map(s=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bd);cursor:pointer;-webkit-user-select:none;user-select:none" onclick="toggleHabitSub('${s.id}','${g.id}')">
+        <div style="width:18px;height:18px;border-radius:50%;border:1.5px solid ${S.habitSubsDone[s.id]?"var(--green)":"var(--bd2)"};background:${S.habitSubsDone[s.id]?"var(--green)":"none"};display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          ${S.habitSubsDone[s.id]?`<svg width="9" height="9" viewBox="0 0 12 12" fill="none"><polyline points="2 6 5 9 10 3" stroke="#0a0a0a" stroke-width="2.5"/></svg>`:""}
+        </div>
+        <span style="flex:1;font-size:13px;color:${S.habitSubsDone[s.id]?"var(--t3)":"var(--t2)"};${S.habitSubsDone[s.id]?"text-decoration:line-through":""}">${s.name}</span>
+      </div>`).join("")}
+      <button class="btn btn-del btn-sm" style="margin-top:8px" onclick="deleteHabit('${g.id}')">Löschen</button>
+    </div>
+  </div>`;
+}
+function toggleHC(gid){const b=document.getElementById("hcb-"+gid);const open=b.style.display==="none";b.style.display=open?"block":"none";}
+function toggleHabitSub(sid,gid){S.habitSubsDone[sid]=!S.habitSubsDone[sid];const g=S.habitGoals.find(x=>x.id===gid);if(g&&g.subs.every(s=>S.habitSubsDone[s.id]))g.streak=(g.streak||0)+1;save();renderHabitsTab();setTimeout(()=>{const b=document.getElementById("hcb-"+gid);if(b&&b.style.display==="none")toggleHC(gid);},10);}
+function addHabit(){const name=prompt("Name der Gewohnheit:");if(!name)return;const ico=prompt("Emoji:")||"🎯";const id="h"+Date.now();S.habitGoals.push({id,ico,name,streak:0,subs:[{id:id+"s1",name:"Heute erledigt"}]});save();renderHabitsTab();}
+function deleteHabit(gid){if(!confirm("Löschen?"))return;S.habitGoals=S.habitGoals.filter(g=>g.id!==gid);save();renderHabitsTab();}
+function renderAITab(){
+  if(!S.apiKey){
+    document.getElementById("gt-ai").innerHTML=`<div class="sp">
+      <div style="background:linear-gradient(135deg,rgba(184,164,248,.12),rgba(122,184,240,.08));border:1px solid rgba(184,164,248,.25);border-radius:var(--r);padding:16px;margin-bottom:14px">
+        <div style="font-size:14px;font-weight:500;color:var(--t);margin-bottom:6px">🤖 Claude KI-Coach</div>
+        <div style="font-size:13px;color:var(--t2);line-height:1.6;margin-bottom:10px">Besprich deine Ziele, lass Buchanalysen erstellen, plane nächste Schritte – direkt in der App.</div>
+        <div style="font-size:12px;color:var(--t3);margin-bottom:10px">API Key von <strong style="color:var(--t2)">console.anthropic.com</strong> – kostenlos, Startguthaben inklusive.</div>
+        <input type="password" id="api-key-input" placeholder="sk-ant-..." style="margin-bottom:8px">
+        <button class="btn btn-p" onclick="saveApiKey()">API Key speichern & starten</button>
+      </div>
+    </div>`;
+    return;
+  }
+  const topics=[{key:"general",label:"💬 Allgemein"},{key:"lg1",label:"📚 Blog & YouTube"},{key:"lg2",label:"🚀 Marketing Agentur"},{key:"lg3",label:"💻 Website-Agentur"},{key:"books",label:"📖 Buchanalyse"}];
+  const current=S.aiTopic||"general";const history=S.chatHistory[current]||[];
+  document.getElementById("gt-ai").innerHTML=`<div class="sp">
+    <div style="display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px;margin-bottom:8px">
+      ${topics.map(t=>`<button onclick="setAITopic('${t.key}')" style="flex-shrink:0;padding:5px 10px;border:1px solid var(--bd2);border-radius:20px;background:${current===t.key?"var(--bg4)":"var(--bg2)"};color:${current===t.key?"var(--t)":"var(--t3)"};font-size:11px;font-family:var(--sans);cursor:pointer">${t.label}</button>`).join("")}
+    </div>
+    <div id="chat-messages" style="min-height:180px;margin-bottom:12px">
+      ${!history.length?`<div style="text-align:center;padding:30px 20px;color:var(--t3);font-size:13px;line-height:1.7">Stell mir eine Frage zu deinen Zielen<br>oder lass uns an einem Thema arbeiten.</div>`:""}
+      ${history.map(m=>`<div style="padding:10px 13px;border-radius:var(--r);margin-bottom:8px;font-size:13px;line-height:1.6;${m.role==="user"?"background:rgba(200,240,122,.12);border:1px solid rgba(200,240,122,.2);color:var(--t);margin-left:8%":"background:var(--bg3);border:1px solid var(--bd2);color:var(--t2)"}">${m.content.replace(/\n/g,"<br>").replace(/\*\*(.*?)\*\*/g,"<strong>$1</strong>")}</div>`).join("")}
+    </div>
+    <div style="display:flex;gap:8px">
+      <textarea id="chat-input" rows="2" placeholder="Frag mich alles zu deinen Zielen..." style="flex:1"></textarea>
+      <button class="btn btn-p btn-sm" style="align-self:flex-end;padding:10px 14px" onclick="sendChatMessage()">→</button>
+    </div>
+    <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+      <button class="btn btn-sm" onclick="quickPrompt('Was sind meine nächsten konkreten Schritte?')">Nächste Schritte</button>
+      <button class="btn btn-sm" onclick="quickPrompt('Erstell mir einen Wochenplan für meine Ziele')">Wochenplan</button>
+      <button class="btn btn-sm" onclick="clearChat()">Leeren</button>
+      <button class="btn btn-del btn-sm" onclick="S.apiKey='';save();renderAITab()">Key löschen</button>
+    </div>
+  </div>`;
+  scrollChatDown();
+}
+function saveApiKey(){const v=document.getElementById("api-key-input")?.value.trim();if(!v||!v.startsWith("sk-ant-")){alert("Bitte einen gültigen API Key eingeben (beginnt mit sk-ant-)");return;}S.apiKey=v;save();renderAITab();}
+function setAITopic(key){S.aiTopic=key;save();renderAITab();}
+function scrollChatDown(){setTimeout(()=>{const el=document.getElementById("chat-messages");if(el)el.scrollTop=el.scrollHeight;},100);}
+function quickPrompt(text){const inp=document.getElementById("chat-input");if(inp){inp.value=text;sendChatMessage();}}
+function clearChat(){const c=S.aiTopic||"general";S.chatHistory[c]=[];save();renderAITab();}
+async function sendChatMessage(){const inp=document.getElementById("chat-input");const text=inp?.value.trim();if(!text)return;inp.value="";const topic=S.aiTopic||"general";if(!S.chatHistory[topic])S.chatHistory[topic]=[];S.chatHistory[topic].push({role:"user",content:text});save();renderAITab();await callClaude(topic);}
+async function openGoalChat(gid){const g=S.lifeGoals.find(x=>x.id===gid);if(!g)return;if(!S.apiKey){setGoalsTab("ai");renderAITab();return;}const prompt=`Ich arbeite an meinem Ziel: "${g.name}". ${g.desc} Geplante Schritte: ${g.steps.map(s=>s.text).join(", ")}. Hilf mir mit konkreten nächsten Schritten und einem realistischen Plan.`;S.aiTopic=gid;if(!S.chatHistory[gid])S.chatHistory[gid]=[];S.chatHistory[gid].push({role:"user",content:prompt});save();setGoalsTab("ai");await callClaude(gid);}
+async function callClaude(topic){
+  const messagesEl=document.getElementById("chat-messages");
+  if(messagesEl){const typing=document.createElement("div");typing.id="typing-ind";typing.className="typing";typing.innerHTML="<span></span><span></span><span></span>";messagesEl.appendChild(typing);scrollChatDown();}
+  const g=S.lifeGoals.find(x=>x.id===topic);
+  const sys=`Du bist persönlicher Coach und Assistent. Die Person hat folgende Lebensziele: 1) Blog/YouTube über Bücher & Kultur aufbauen, 2) PR & Marketing Agentur für Influencer gründen, 3) Website-Agentur aufbauen. Sie hat auch einen Ernährungsplan und trainiert Push/Pull/Legs (Di·Sa·So). Antworte auf Deutsch, direkt, ehrlich und motivierend. Keine Floskeln. Konkrete umsetzbare Ratschläge.${g?` Aktuelles Thema: "${g.name}".`:""}`;
+  const messages=(S.chatHistory[topic]||[]).slice(-12).map(m=>({role:m.role,content:m.content}));
+  try{
+    const resp=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":S.apiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,system:sys,messages})});
+    const data=await resp.json();
+    const reply=data.content?.[0]?.text||"Fehler beim Laden der Antwort.";
+    document.getElementById("typing-ind")?.remove();
+    if(!S.chatHistory[topic])S.chatHistory[topic]=[];
+    S.chatHistory[topic].push({role:"assistant",content:reply});save();renderAITab();
+  }catch(e){
+    document.getElementById("typing-ind")?.remove();
+    S.chatHistory[topic]=(S.chatHistory[topic]||[]);S.chatHistory[topic].push({role:"assistant",content:"Verbindungsfehler. Bitte prüfe deinen API Key und die Internetverbindung."});save();renderAITab();
+  }
+}
+function quickNote(){
+  if(!S.notes)S.notes=[];
+  const txt=prompt("Schnell-Notiz:");if(!txt)return;
+  S.notes.unshift({title:txt.slice(0,60),content:txt,cat:"💡 Ideen",date:new Date().toLocaleDateString("de",{day:"numeric",month:"short"})});
+  save();
+  // Show brief confirmation
+  const btn=document.querySelector('[onclick="quickNote()"]');
+  if(btn){const orig=btn.textContent;btn.textContent="✓ Gespeichert!";btn.style.background="var(--teal)";setTimeout(()=>{btn.textContent=orig;btn.style.background="var(--green)";},1500);}
+}
+function renderNotes(){
+  if(!S.notes)S.notes=[];if(!S.notesTab)S.notesTab="all";if(!S.noteCategories)S.noteCategories=["💡 Ideen","📋 Aufgaben","✍️ Skripte","📖 Gedanken","🎯 Projekte"];
+  const cats=S.noteCategories;
+  const filtered=S.notesTab==="all"?S.notes:S.notes.filter(n=>n.cat===S.notesTab);
+  document.getElementById("s-notes").innerHTML=`
+    <div class="ph"><div class="ph-eye">Dein Workspace</div><div class="ph-title"><em>Notizen</em> & Ideen</div></div>
+    <div style="display:flex;gap:6px;padding:0 20px 12px;overflow-x:auto;scrollbar-width:none">
+      <button onclick="setNotesTab('all')" style="flex-shrink:0;padding:5px 12px;border:1px solid ${S.notesTab==="all"?"var(--bd3)":"var(--bd2)"};border-radius:20px;background:${S.notesTab==="all"?"var(--bg4)":"var(--bg2)"};color:${S.notesTab==="all"?"var(--t)":"var(--t2)"};font-family:var(--sans);font-size:11px;cursor:pointer">Alle (${S.notes.length})</button>
+      ${cats.map(c=>`<button onclick="setNotesTab('${c}')" style="flex-shrink:0;padding:5px 12px;border:1px solid ${S.notesTab===c?"var(--bd3)":"var(--bd2)"};border-radius:20px;background:${S.notesTab===c?"var(--bg4)":"var(--bg2)"};color:${S.notesTab===c?"var(--t)":"var(--t2)"};font-family:var(--sans);font-size:11px;cursor:pointer">${c}</button>`).join("")}
+    </div>
+    <div class="sp" style="padding-top:0">
+      <button class="btn btn-p" style="margin-bottom:12px" onclick="newNote()">+ Neue Notiz</button>
+      ${!filtered.length?`<div style="text-align:center;padding:40px 20px;color:var(--t3);font-size:14px;line-height:1.8">Noch keine Notizen${S.notesTab!=="all"?" in dieser Kategorie":""}.<br>Tippe auf + um zu starten.</div>`:""}
+      ${filtered.map((n,i)=>{const realIdx=S.notes.indexOf(n);return`<div style="background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;margin-bottom:8px" id="nc-${realIdx}">
+        <div style="padding:12px 14px;cursor:pointer;display:flex;align-items:flex-start;gap:10px" onclick="toggleNote(${realIdx})">
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px">
+              <span style="font-size:10px;background:var(--bg3);border-radius:10px;padding:2px 8px;color:var(--t3)">${n.cat}</span>
+              <span style="font-size:10px;color:var(--t3)">${n.date}</span>
+            </div>
+            <div style="font-size:14px;font-weight:500;color:var(--t);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${n.title||"Unbenannte Notiz"}</div>
+            <div style="font-size:12px;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${(n.content||"").slice(0,80)}${(n.content||"").length>80?"…":""}</div>
+          </div>
+          <div style="font-size:11px;color:var(--t3);flex-shrink:0" id="narr-${realIdx}">▾</div>
+        </div>
+        <div id="nb-${realIdx}" style="display:none;padding:0 14px 14px;border-top:1px solid var(--bd)">
+          <div style="font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--t3);margin:10px 0 6px">Titel</div>
+          <input type="text" value="${n.title||""}" placeholder="Titel..." onchange="updateNote(${realIdx},'title',this.value)" style="margin-bottom:8px">
+          <div style="font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--t3);margin-bottom:6px">Kategorie</div>
+          <select onchange="updateNote(${realIdx},'cat',this.value)" style="margin-bottom:8px">
+            ${cats.map(c=>`<option value="${c}"${n.cat===c?" selected":""}>${c}</option>`).join("")}
+          </select>
+          <div style="font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--t3);margin-bottom:6px">Inhalt</div>
+          <textarea rows="8" placeholder="Schreib hier alles rein – Ideen, Skripte, Gedanken, To-Dos..." onchange="updateNote(${realIdx},'content',this.value)" style="margin-bottom:8px;font-family:var(--sans)">${n.content||""}</textarea>
+          <div style="display:flex;gap:6px">
+            <button class="btn btn-purple btn-sm" onclick="aiExpandNote(${realIdx})">🤖 KI-Hilfe</button>
+            <button class="btn btn-del btn-sm" onclick="deleteNote(${realIdx})">Löschen</button>
+          </div>
+        </div>
+      </div>`;}).join("")}
+    </div>`;
+}
+function setNotesTab(t){S.notesTab=t;save();renderNotes();}
+function newNote(){
+  if(!S.notes)S.notes=[];
+  const cat=S.notesTab==="all"?"💡 Ideen":S.notesTab;
+  S.notes.unshift({title:"",content:"",cat,date:new Date().toLocaleDateString("de",{day:"numeric",month:"short"})});
+  save();renderNotes();
+  setTimeout(()=>{const b=document.getElementById("nb-0");const arr=document.getElementById("narr-0");if(b){b.style.display="block";}},50);
+}
+function toggleNote(i){const b=document.getElementById("nb-"+i);const open=b.style.display==="none";b.style.display=open?"block":"none";}
+function updateNote(i,field,val){if(!S.notes[i])return;S.notes[i][field]=val;save();}
+function deleteNote(i){if(!confirm("Notiz löschen?"))return;S.notes.splice(i,1);save();renderNotes();}
+function aiExpandNote(i){
+  const n=S.notes[i];if(!S.apiKey){setGoalsTab("ai");go("goals",document.getElementById("nb-goals"));return;}
+  const prompt=`Ich habe folgende Notiz geschrieben:\nTitel: ${n.title||"(kein Titel)"}\nKategorie: ${n.cat}\nInhalt: ${n.content||"(noch leer)"}\n\nKannst du mir dabei helfen, diese Idee weiterzuentwickeln, zu strukturieren oder auszubauen?`;
+  if(!S.chatHistory)S.chatHistory={};
+  if(!S.chatHistory["notes"])S.chatHistory["notes"]=[];
+  S.chatHistory["notes"].push({role:"user",content:prompt});
+  S.goalsTab="ai";S.aiTopic="notes";save();
+  go("goals",document.getElementById("nb-goals"));
+  setTimeout(()=>callClaude("notes"),150);
+}
+
+function renderWeeklySummary(){
+  const el=document.getElementById("gt-weekly");if(!el)return;
+  const totalEntries=S.entries.length;
+  const recentEntries=S.entries.slice(-7);
+  const avgSleep=recentEntries.length?Math.round(recentEntries.reduce((a,e)=>a+(e.sleep||7),0)/recentEntries.length*10)/10:0;
+  const moodMap={"😫":1,"😕":2,"😐":3,"😊":4,"😄":5};
+  const avgMood=recentEntries.filter(e=>e.mood).length?Math.round(recentEntries.filter(e=>e.mood).reduce((a,e)=>a+(moodMap[e.mood]||3),0)/recentEntries.filter(e=>e.mood).length*10)/10:0;
+  const moodEmoji=avgMood>=4.5?"😄":avgMood>=3.5?"😊":avgMood>=2.5?"😐":avgMood>=1.5?"😕":"😫";
+  const gymDone=S.habitGoals.find(g=>g.id==="g1")?.streak||0;
+  const suppsDone=S.suppStreak||0;
+  const lifeProgress=S.lifeGoals.map(g=>g.progress||0);
+  const avgProgress=lifeProgress.length?Math.round(lifeProgress.reduce((a,b)=>a+b,0)/lifeProgress.length):0;
+  const doneHabits=Object.values(S.habitSubsDone).filter(Boolean).length;
+  const weekGoals=S.weeklyGoals||[];
+  el.innerHTML=`<div class="sp">
+    <div style="background:linear-gradient(135deg,rgba(200,240,122,.1),rgba(143,212,168,.07));border:1px solid rgba(200,240,122,.2);border-radius:var(--r);padding:14px 16px;margin-bottom:14px">
+      <div style="font-family:var(--serif);font-size:18px;color:var(--t);margin-bottom:4px">Woche im Überblick</div>
+      <div style="font-size:12px;color:var(--t3)">${new Date().toLocaleDateString("de",{day:"numeric",month:"long",year:"numeric"})}</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+      <div class="card" style="margin-bottom:0;text-align:center"><div style="font-size:24px;margin-bottom:4px">${moodEmoji}</div><div style="font-size:11px;color:var(--t3)">Ø Stimmung</div><div style="font-size:14px;font-weight:500;color:var(--t)">${avgMood||"—"}/5</div></div>
+      <div class="card" style="margin-bottom:0;text-align:center"><div style="font-size:24px;margin-bottom:4px">😴</div><div style="font-size:11px;color:var(--t3)">Ø Schlaf</div><div style="font-size:14px;font-weight:500;color:var(--t)">${avgSleep||"—"}h</div></div>
+      <div class="card" style="margin-bottom:0;text-align:center"><div style="font-size:24px;margin-bottom:4px">📓</div><div style="font-size:11px;color:var(--t3)">Journal-Einträge</div><div style="font-size:14px;font-weight:500;color:var(--t)">${recentEntries.length}</div></div>
+      <div class="card" style="margin-bottom:0;text-align:center"><div style="font-size:24px;margin-bottom:4px">🎯</div><div style="font-size:11px;color:var(--t3)">Habits erledigt</div><div style="font-size:14px;font-weight:500;color:var(--t)">${doneHabits}</div></div>
+    </div>
+    <div class="slbl">Fortschritt Lebensvisionen</div>
+    ${S.lifeGoals.map(g=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+      <div style="font-size:12px;color:var(--t2);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${g.name.split(" ").slice(0,3).join(" ")}</div>
+      <div style="width:80px;height:4px;background:var(--bg4);border-radius:2px;overflow:hidden;flex-shrink:0"><div style="height:100%;background:${g.color};width:${g.progress||0}%"></div></div>
+      <div style="font-size:11px;color:var(--t3);width:28px;text-align:right;flex-shrink:0">${g.progress||0}%</div>
+    </div>`).join("")}
+    <div class="slbl">Ziele für nächste Woche</div>
+    <div class="card">
+      ${weekGoals.map((wg,i)=>`<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--bd);cursor:pointer" onclick="toggleWeekGoal(${i})">
+        <div style="width:18px;height:18px;border-radius:50%;border:1.5px solid ${wg.done?"var(--green)":"var(--bd2)"};background:${wg.done?"var(--green)":"none"};display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          ${wg.done?`<svg width="9" height="9" viewBox="0 0 12 12" fill="none"><polyline points="2 6 5 9 10 3" stroke="#0a0a0a" stroke-width="2.5"/></svg>`:""}
+        </div>
+        <span style="flex:1;font-size:13px;color:${wg.done?"var(--t3)":"var(--t2)"};${wg.done?"text-decoration:line-through":""}">${wg.text}</span>
+        <button onclick="event.stopPropagation();deleteWeekGoal(${i})" style="border:none;background:none;color:var(--t3);font-size:12px;cursor:pointer">×</button>
+      </div>`).join("")}
+      ${!weekGoals.length?`<div style="font-size:13px;color:var(--t3);text-align:center;padding:6px 0">Noch keine Wochenziele</div>`:""}
+    </div>
+    <div style="display:flex;gap:8px;margin-top:6px"><input type="text" id="wg-in" placeholder="Neues Wochenziel..." style="flex:1"><button class="btn btn-sm btn-p" onclick="addWeekGoal()">+</button></div>
+    <div class="slbl">Was läuft gut?</div>
+    <textarea rows="2" placeholder="Was ist diese Woche gut gelaufen?" onchange="S.weeklyGood=this.value;save()">${S.weeklyGood||""}</textarea>
+    <div class="slbl">Was könnte besser laufen?</div>
+    <textarea rows="2" placeholder="Was möchte ich nächste Woche verbessern?" onchange="S.weeklyImprove=this.value;save()">${S.weeklyImprove||""}</textarea>
+    <button class="btn btn-purple" style="margin-top:10px" onclick="aiWeeklySummary()">🤖 KI-Wochenreflexion</button>
+  </div>`;
+}
+function toggleWeekGoal(i){S.weeklyGoals[i].done=!S.weeklyGoals[i].done;save();renderWeeklySummary();}
+function deleteWeekGoal(i){S.weeklyGoals.splice(i,1);save();renderWeeklySummary();}
+function addWeekGoal(){const inp=document.getElementById("wg-in");const txt=inp?.value.trim();if(!txt)return;if(!S.weeklyGoals)S.weeklyGoals=[];S.weeklyGoals.push({text:txt,done:false});inp.value="";save();renderWeeklySummary();}
+function aiWeeklySummary(){
+  if(!S.apiKey){setGoalsTab("ai");return;}
+  const recentEntries=S.entries.slice(-7);
+  const avgSleep=recentEntries.length?Math.round(recentEntries.reduce((a,e)=>a+(e.sleep||7),0)/recentEntries.length*10)/10:0;
+  const prompt=`Bitte erstelle eine kurze Wochenreflexion für mich basierend auf diesen Daten:\n- Journal-Einträge diese Woche: ${recentEntries.length}\n- Ø Schlaf: ${avgSleep}h\n- Gym-Streak: ${S.habitGoals.find(g=>g.id==="g1")?.streak||0} Tage\n- Supplement-Streak: ${S.suppStreak||0} Tage\n- Wochenziele: ${(S.weeklyGoals||[]).map(g=>g.text+(g.done?" ✓":"")).join(", ")||"keine"}\n- Was lief gut: ${S.weeklyGood||"nicht angegeben"}\n- Was verbessern: ${S.weeklyImprove||"nicht angegeben"}\n- Lebensvisionen-Fortschritt: ${S.lifeGoals.map(g=>g.name.split(" ").slice(0,2).join(" ")+": "+g.progress+"%").join(", ")}\n\nGib mir eine ehrliche, motivierende Wochenreflexion mit konkreten Empfehlungen für nächste Woche.`;
+  S.aiTopic="weekly";if(!S.chatHistory)S.chatHistory={};
+  S.chatHistory["weekly"]=[{role:"user",content:prompt}];
+  S.goalsTab="ai";save();setGoalsTab("ai");
+  setTimeout(()=>callClaude("weekly"),100);
+}
+
+load();renderDash();
+</script>
+</body>
+</html>
